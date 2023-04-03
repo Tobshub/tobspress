@@ -1,0 +1,17 @@
+{
+  "name": "tobspress",
+  "version": "1.0.0",
+  "description": "having fun trying to make my version of express",
+  "main": "dist/indexks",
+  "author": "Tobshub",
+  "license": "MIT",
+  "scripts": {
+    "start": "node dist/app.js",
+    "prestart": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.3"
+  }
+}
