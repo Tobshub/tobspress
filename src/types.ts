@@ -1,15 +1,15 @@
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import fs from "fs/promises";
 
 export type Method = "GET" | "POST";
 
-// TODO: support for reading headers on requests
-// support for setting headers on responses
 export class TobspressRequest {
   body: Promise<any>;
+  headers: IncomingHttpHeaders;
   constructor(readonly rawRequest: IncomingMessage) {
     this.body = this.parseBody();
+    this.headers = this.rawRequest.headers;
   }
 
   method: Method = this.rawRequest.method === "GET" ? "GET" : "POST";
@@ -18,14 +18,14 @@ export class TobspressRequest {
   async parseBody() {
     let raw_body = "";
     // parse chunk emitted from data event as request body
-    if (this.rawRequest.method && this.method === "POST") {
+    if (this.method === "POST") {
       await this.rawRequest.on("data", (chunk) => {
         raw_body += Buffer.from(chunk).toString();
       });
     }
 
     // parse the raw body into an object
-    let body: any;
+    let body: any = undefined;
     try {
       body = raw_body ? JSON.parse(raw_body) : null;
     } catch (error) {
@@ -62,6 +62,19 @@ export class TobspressResponse {
 
   status(code: number) {
     this.code = code;
+    return this;
+  }
+
+  setHeader(
+    name: string,
+    value: string | number | string[]
+  ): TobspressResponse {
+    this.rawResponse.setHeader(name, value);
+    return this;
+  }
+
+  removeHeader(name: string): TobspressResponse {
+    this.rawResponse.removeHeader(name);
     return this;
   }
 
