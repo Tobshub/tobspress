@@ -67,7 +67,7 @@ export default class Tobspress {
           }) as TobspressRouterType;
           // reset searchPath
           searchPath = "";
-        } else if (i === url.length - 1) {
+        } else if (i === url.length - 1 && !router?.catchAll) {
           router = undefined;
         }
       }
@@ -95,7 +95,7 @@ export default class Tobspress {
   ): Tobspress {
     this.children.set(
       { path: sanitizePath(path) },
-      new TobspressRouter(fn.handler, fn.router?.children)
+      new TobspressRouter(fn.handler, fn.router?.children, true)
     );
     return this;
   }
@@ -122,7 +122,8 @@ export class TobspressRouter implements TobspressRouterType {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   constructor(
     readonly handler?: TobspressRequestHandler,
-    children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>
+    children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>,
+    readonly catchAll?: boolean
   ) {
     this.children = children ?? new TobsMap();
   }
@@ -133,7 +134,7 @@ export class TobspressRouter implements TobspressRouterType {
   ): TobspressRouter {
     this.children.set(
       { path: sanitizePath(path) },
-      new TobspressRouter(fn.handler, fn.router?.children)
+      new TobspressRouter(fn.handler, fn.router?.children, true)
     );
     return this;
   }

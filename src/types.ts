@@ -118,6 +118,7 @@ export type TobspressRequestHandler = (
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
+  catchAll?: boolean;
 };
 
 export class TobsMap<Key, Value> {

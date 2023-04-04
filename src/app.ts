@@ -4,9 +4,16 @@ const app = new Tobspress();
 
 app.static("public");
 
-app.use("hello", {
+app.use("echo", {
   handler: async (req, res) => {
-    res.send({ message: "hi there!" });
+    const url = req.url.split("/").filter((path) => path !== "");
+    // remove echo from the text
+    url.shift();
+    if (url.length) {
+      res.send(url.join(" ").replace(/(%20)|\+/g, " "));
+      return;
+    }
+    res.send({ message: "Append text to the url to make me say stuff!" });
   },
 });
 
