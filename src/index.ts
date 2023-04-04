@@ -8,7 +8,6 @@ import {
   TobspressResponse,
 } from "./types";
 import path from "path";
-import fs from "fs/promises";
 
 /** The Tobspress instance */
 export default class Tobspress {
@@ -79,24 +78,14 @@ export default class Tobspress {
       return;
     }
 
-    const fileFound: boolean = await fs
-      .readFile(path.join(this.staticFolderPath, url.at(-1) as string), {
-        encoding: "utf8",
-      })
-      .then((data) => {
-        const file = url.at(-1) as string;
-        response.send(data, {
-          type: "file",
-          extention: file?.slice(file?.lastIndexOf(".") ?? 0),
-        });
-        return true;
-      })
-      .catch((_) => false);
+    // as a last resort, treat the url as a static file path
+    const foundFile = await response.sendFile(
+      path.join(this.staticFolderPath, request.url)
+    );
 
-    if (fileFound) {
-      return;
-    }
-    // return 404 if no handler is found
+    if (foundFile) return;
+
+    // return 404 if no handler or file is found
     response.status(404).send({ error: "NOT FOUND" });
   }
 

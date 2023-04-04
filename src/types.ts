@@ -78,47 +78,34 @@ export class TobspressResponse {
     return this;
   }
 
-  async send(
-    data: string | number | object,
-    options?: { type: "file" | "path"; extention: string }
-  ) {
-    if (options && options.type === "file") {
-      this.rawResponse.writeHead(this.code, {
-        "Content-Type": `${
-          mimeType[options.extention] ?? "text/plain"
-        }; encoding=utf8`,
-      });
-      this.rawResponse.write(data);
-      this.rawResponse.end();
-      return;
-    } else if (options && options.type === "path") {
-      await fs
-        .readFile(
-          path.join(
-            process.cwd(),
-            typeof data === "string" ? data : data.toString()
-          ),
-          {
-            encoding: "utf8",
-          }
-        )
-        .then((data) => {
-          new TobspressResponse(this.rawResponse).send(data, {
-            type: "file",
-            extention: options.extention,
-          });
-        })
-        .catch((_) =>
-          new TobspressResponse(this.rawResponse)
-            .status(404)
-            .send({ error: "NOT FOUND" })
-        );
-      return;
-    }
+  async sendFile(file_path: string) {
+    const ext_start = file_path.lastIndexOf(".");
+    const file_extension = file_path.slice(ext_start < 0 ? 0 : ext_start);
+    // `path.resolve` here helps avoid some issues
+    const abs_path = path.resolve(process.cwd(), file_path);
+    const res = await fs
+      .readFile(abs_path, {
+        encoding: "utf8",
+      })
+      .then((data) => {
+        this.send(data, {
+          type: mimeType[file_extension] ?? "text/plain",
+        });
+        return true;
+      })
+      .catch((_) => false);
+    return res;
+  }
+
+  async send(data: string | number | object, options?: { type?: string }) {
     this.rawResponse.writeHead(this.code, {
-      "Content-Type": "application/json; encoding=utf8",
+      "Content-Type": `${options?.type ?? "application/json"}; encoding=utf8`,
     });
-    this.rawResponse.write(JSON.stringify(data));
+    this.rawResponse.write(
+      options?.type === "application/json" || !options?.type
+        ? JSON.stringify(data)
+        : data
+    );
     this.rawResponse.end();
   }
 }

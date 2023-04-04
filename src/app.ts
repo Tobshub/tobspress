@@ -19,7 +19,7 @@ app.post("form", {
 
 app.use("/", {
   handler: async (req, res) => {
-    res.send("public/index.html", { type: "path", extention: ".html" });
+    res.sendFile("public/index.html");
   },
 });
 
