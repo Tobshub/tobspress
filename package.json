@@ -24,6 +24,9 @@
   "repository": {
     "url": "https://github.com/Tobshub/tobspress"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
