@@ -2,7 +2,12 @@ import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import fs from "fs/promises";
 
-export type Method = "GET" | "POST" | "PUT" | "DELETE";
+export const enum Method {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE"
+}
 
 /** Wrapper for `http.IncomingMessage` request */
 export class TobspressRequest {
@@ -23,12 +28,12 @@ export class TobspressRequest {
      * */
     this.method =
       rawRequest.method === "GET"
-        ? "GET"
+        ? Method.GET
         : rawRequest.method === "PUT"
-        ? "PUT"
+        ? Method.PUT
         : rawRequest.method === "DELETE"
-        ? "DELETE"
-        : "POST";
+        ? Method.DELETE
+        : Method.POST;
     this.url = this.rawRequest.url?.substring(1) ?? "";
   }
 
@@ -36,7 +41,7 @@ export class TobspressRequest {
   async parseBody() {
     let raw_body = "";
     // parse chunk emitted from data event as request body
-    if (this.method === "POST") {
+    if (this.method !== Method.GET) {
       await this.rawRequest.on("data", (chunk) => {
         raw_body += Buffer.from(chunk).toString();
       });

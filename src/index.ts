@@ -2,7 +2,7 @@ import { Server, IncomingMessage, ServerResponse, createServer } from "http";
 import {
   type TobspressRouterType,
   type TobspressRequestHandler,
-  type Method,
+  Method,
   TobsMap,
   TobspressRequest,
   TobspressResponse,
@@ -100,25 +100,25 @@ export default class Tobspress {
 
   /** Attaches a HTTP POST method router */
   post(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter("POST", path, fn);
+    this.attachRouter(Method.POST, path, fn);
     return this;
   }
 
   /** Attaches a HTTP GET method router */
   get(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter("GET", path, fn);
+    this.attachRouter(Method.GET, path, fn);
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
   put(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter("PUT", path, fn);
+    this.attachRouter(Method.PUT, path, fn);
     return this;
   }
 
   /** Attaches a HTTP DELETE method router */
   delete(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter("DELETE", path, fn);
+    this.attachRouter(Method.DELETE, path, fn);
     return this;
   }
 
@@ -174,25 +174,25 @@ export class TobspressRouter implements TobspressRouterType {
 
   /** Attaches a HTTP GET method router */
   get(path: string, fn: TobspressRouterFn): TobspressRouter {
-    this.attachRouter("GET", path, fn);
+    this.attachRouter(Method.GET, path, fn);
     return this;
   }
 
   /** Attaches a HTTP POST method router */
   post(path: string, fn: TobspressRouterFn): TobspressRouter {
-    this.attachRouter("POST", path, fn);
+    this.attachRouter(Method.POST, path, fn);
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
   put(path: string, fn: TobspressRouterFn): TobspressRouter {
-    this.attachRouter("PUT", path, fn);
+    this.attachRouter(Method.PUT, path, fn);
     return this;
   }
 
   /** Attaches a HTTP DELETE method router */
   delete(path: string, fn: TobspressRouterFn): TobspressRouter {
-    this.attachRouter("DELETE", path, fn);
+    this.attachRouter(Method.DELETE, path, fn);
     return this;
   }
 
