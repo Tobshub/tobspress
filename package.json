@@ -6,12 +6,13 @@
   "author": "Tobshub",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "ts-node test/app.ts",
     "prestart": "tsc",
     "dev": "tsc --watch"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
   }
 }
