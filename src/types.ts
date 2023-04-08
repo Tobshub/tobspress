@@ -152,7 +152,7 @@ export class TobspressResponse {
 export type TobspressRequestHandler = (
   req: TobspressRequest,
   res: TobspressResponse
-) => Promise<any>;
+) => Promise<void> | void;
 
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;
