@@ -15,6 +15,8 @@ Create a new instance of `Tobspress`
 import Tobspress from "@tobshub/tobspress";
 
 const app = new Tobspress();
+
+app.listen(4000);
 ```
 
 The `Tobspress` instance exposes method that will be familiar if you have used a similar library.
@@ -41,6 +43,8 @@ app.use("/hello", {
 app.use("/", (req, res) => {
   res.sendFile("public/index.html");
 });
+
+// existing code
 ```
 
 <!-- TODO: API explanations -->
