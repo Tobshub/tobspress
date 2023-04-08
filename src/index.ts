@@ -6,6 +6,7 @@ import {
   TobsMap,
   TobspressRequest,
   TobspressResponse,
+  TobspressRouterFn,
 } from "./types";
 import path from "path";
 
@@ -89,28 +90,42 @@ export default class Tobspress {
     response.status(404).send({ error: "NOT FOUND" });
   }
 
-  use(
-    path: string,
-    fn: { router?: TobspressRouterType; handler?: TobspressRequestHandler }
-  ): Tobspress {
-    this.children.set(
-      { path: sanitizePath(path) },
-      new TobspressRouter(fn.handler, fn.router?.children, true)
-    );
+  use(path: string, fn: TobspressRouterFn): Tobspress {
+    this.attachRouter("USE", path, fn);
     return this;
   }
 
-  post(
-    path: string,
-    fn: { router?: TobspressRouterType; handler?: TobspressRequestHandler }
-  ): Tobspress {
-    this.children.set(
-      { path: sanitizePath(path), method: "POST" },
-      new TobspressRouter(fn.handler, fn.router?.children)
-    );
+  post(path: string, fn: TobspressRouterFn): Tobspress {
+    this.attachRouter("POST", path, fn);
     return this;
   }
 
+  get(path: string, fn: TobspressRouterFn): Tobspress {
+    this.attachRouter("GET", path, fn);
+    return this;
+  }
+
+  private attachRouter(
+    method: Method | "USE",
+    path: string,
+    fn: TobspressRouterFn
+  ) {
+    if (typeof fn === "function") {
+      this.children.set(
+        method === "USE"
+          ? { path: sanitizePath(path) }
+          : { path: sanitizePath(path), method },
+        new TobspressRouter(fn, undefined, method === "USE")
+      );
+    } else {
+      this.children.set(
+        method === "USE"
+          ? { path: sanitizePath(path) }
+          : { path: sanitizePath(path), method },
+        new TobspressRouter(fn.handler, fn.router?.children)
+      );
+    }
+  }
   // TODO: implement the following
   put(path: string, fn: {}) {}
 
@@ -132,36 +147,18 @@ export class TobspressRouter implements TobspressRouterType {
     this.children = children ?? new TobsMap();
   }
 
-  use(
-    path: string,
-    fn: { router?: TobspressRouterType; handler?: TobspressRequestHandler }
-  ): TobspressRouter {
-    this.children.set(
-      { path: sanitizePath(path) },
-      new TobspressRouter(fn.handler, fn.router?.children, true)
-    );
+  use(path: string, fn: TobspressRouterFn): TobspressRouter {
+    this.attachRouter("USE", path, fn);
     return this;
   }
 
-  get(
-    path: string,
-    fn: { handler?: TobspressRequestHandler; router?: TobspressRouterType }
-  ): TobspressRouter {
-    this.children.set(
-      { path: sanitizePath(path), method: "GET" },
-      new TobspressRouter(fn.handler, fn.router?.children)
-    );
+  get(path: string, fn: TobspressRouterFn): TobspressRouter {
+    this.attachRouter("GET", path, fn);
     return this;
   }
 
-  post(
-    path: string,
-    fn: { handler?: TobspressRequestHandler; router?: TobspressRouterType }
-  ): TobspressRouter {
-    this.children.set(
-      { path: sanitizePath(path), method: "POST" },
-      new TobspressRouter(fn.handler, fn.router?.children)
-    );
+  post(path: string, fn: TobspressRouterFn): TobspressRouter {
+    this.attachRouter("POST", path, fn);
     return this;
   }
 
@@ -169,6 +166,28 @@ export class TobspressRouter implements TobspressRouterType {
   put(path: string, fn: {}) {}
 
   delete(path: string, fn: {}) {}
+
+  private attachRouter(
+    method: Method | "USE",
+    path: string,
+    fn: TobspressRouterFn
+  ) {
+    if (typeof fn === "function") {
+      this.children.set(
+        method === "USE"
+          ? { path: sanitizePath(path) }
+          : { path: sanitizePath(path), method: "POST" },
+        new TobspressRouter(fn, undefined, method === "USE")
+      );
+    } else {
+      this.children.set(
+        method === "USE"
+          ? { path: sanitizePath(path) }
+          : { path: sanitizePath(path), method: "POST" },
+        new TobspressRouter(fn.handler, fn.router?.children, method === "USE")
+      );
+    }
+  }
 }
 
 function splitPath(path: string) {

@@ -148,3 +148,7 @@ export class TobsMap<Key, Value> {
     return this.map.size;
   }
 }
+
+export type TobspressRouterFn =
+  | TobspressRequestHandler
+  | { handler?: TobspressRequestHandler; router?: TobspressRouterType };
