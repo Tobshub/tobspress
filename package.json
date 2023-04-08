@@ -1,7 +1,7 @@
 {
   "name": "@tobshub/tobspress",
   "version": "1.0.0",
-  "description": "having fun trying to make my version of express",
+  "description": "Nodejs HTTP Client for building REST APIs",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "type": "module",
