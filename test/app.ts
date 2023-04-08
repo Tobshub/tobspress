@@ -1,4 +1,4 @@
-import Tobspress, { TobspressRouter } from "./index";
+import Tobspress, { TobspressRouter } from "../src";
 
 const app = new Tobspress();
 
