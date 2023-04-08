@@ -111,13 +111,17 @@ export default class Tobspress {
     return this;
   }
 
+  // TODO: implement the following
+  put(path: string, fn: {}) {}
+
+  delete(path: string, fn: {}) {}
+
   static(folderPath: string) {
     const staticFolder = path.join(process.cwd(), folderPath);
     this.staticFolderPath = staticFolder;
   }
 }
 
-// TODO: figure out router attachment system
 export class TobspressRouter implements TobspressRouterType {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   constructor(
@@ -160,6 +164,11 @@ export class TobspressRouter implements TobspressRouterType {
     );
     return this;
   }
+
+  // TODO: implement the following
+  put(path: string, fn: {}) {}
+
+  delete(path: string, fn: {}) {}
 }
 
 function splitPath(path: string) {
