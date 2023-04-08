@@ -12,7 +12,14 @@ export class TobspressRequest {
     this.headers = this.rawRequest.headers;
   }
 
-  method: Method = this.rawRequest.method === "GET" ? "GET" : "POST";
+  method: Method =
+    this.rawRequest.method === "GET"
+      ? "GET"
+      : this.rawRequest.method === "PUT"
+      ? "PUT"
+      : this.rawRequest.method === "DELETE"
+      ? "DELETE"
+      : "POST";
   url: string = (this.rawRequest.url ?? "").substring(1);
 
   async parseBody() {
