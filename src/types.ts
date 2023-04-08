@@ -4,7 +4,11 @@ import fs from "fs/promises";
 
 export type Method = "GET" | "POST" | "PUT" | "DELETE";
 
+/** Wrapper for `http.IncomingMessage` request */
 export class TobspressRequest {
+  /**
+   * HTTP request body parsed as JSON
+   * */
   body: Promise<any>;
   headers: IncomingHttpHeaders;
   constructor(readonly rawRequest: IncomingMessage) {
@@ -12,6 +16,11 @@ export class TobspressRequest {
     this.headers = this.rawRequest.headers;
   }
 
+  /**
+   * HTTP request method
+   * Can only be "GET", "PUT", "DELETE", or "POST"
+   * If the request method is not listed above, it will default to a post
+   * */
   method: Method =
     this.rawRequest.method === "GET"
       ? "GET"
@@ -61,12 +70,20 @@ const mimeType: { [key: string]: string } = {
   ".ttf": "application/x-font-ttf",
 };
 
+/** Wrapper for `http.ServerResponse` response */
 export class TobspressResponse {
+  /**
+   * The status code of the HTTP response
+   * By default it is 200
+   * */
   code: number;
   constructor(readonly rawResponse: ServerResponse) {
     this.code = 200;
   }
 
+  /**
+   * Takes a valid HTTP status code and sets it on the HTTP response
+   * */
   status(code: number) {
     this.code = code;
     return this;
@@ -85,6 +102,10 @@ export class TobspressResponse {
     return this;
   }
 
+  /**
+   * Sends file at `file_path` as HTTP response
+   * @returns false if the file is not found
+   * */
   async sendFile(file_path: string) {
     const ext_start = file_path.lastIndexOf(".");
     const file_extension = file_path.slice(ext_start < 0 ? 0 : ext_start);
@@ -104,6 +125,10 @@ export class TobspressResponse {
     return res;
   }
 
+  /**
+   * Sends arbritrary data as the HTTP response
+   * By default it attempts to JSON serialize the data
+   * */
   async send(data: string | number | object, options?: { type?: string }) {
     this.rawResponse.writeHead(this.code, {
       "Content-Type": `${options?.type ?? "application/json"}; encoding=utf8`,
