@@ -40,7 +40,7 @@ class Tobspress {
     const response = new TobspressResponse(res);
     // search for the req path in `this.routers`
     const url = splitPath(request.url);
-    console.log({ url: request.url });
+    
     let router: TobspressRouterType | undefined = this;
     let searchPath = "";
 
