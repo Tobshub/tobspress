@@ -11,6 +11,7 @@ npm i @tobshub/tobspress
 
 ## Usage
 A simple example is available [here](./example/src/index.ts)
+
 Create a new instance of `Tobspress`
 ```javascript
 import Tobspress from "@tobshub/tobspress";
