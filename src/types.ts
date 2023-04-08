@@ -2,7 +2,7 @@ import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import fs from "fs/promises";
 
-export type Method = "GET" | "POST";
+export type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 export class TobspressRequest {
   body: Promise<any>;

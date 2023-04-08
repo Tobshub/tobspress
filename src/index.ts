@@ -105,6 +105,16 @@ export default class Tobspress {
     return this;
   }
 
+  put(path: string, fn: TobspressRouterFn): Tobspress {
+    this.attachRouter("PUT", path, fn);
+    return this;
+  }
+
+  delete(path: string, fn: TobspressRouterFn): Tobspress {
+    this.attachRouter("DELETE", path, fn);
+    return this;
+  }
+
   private attachRouter(
     method: Method | "USE",
     path: string,
@@ -126,10 +136,6 @@ export default class Tobspress {
       );
     }
   }
-  // TODO: implement the following
-  put(path: string, fn: {}) {}
-
-  delete(path: string, fn: {}) {}
 
   static(folderPath: string) {
     const staticFolder = path.join(process.cwd(), folderPath);
@@ -163,9 +169,15 @@ export class TobspressRouter implements TobspressRouterType {
   }
 
   // TODO: implement the following
-  put(path: string, fn: {}) {}
+  put(path: string, fn: TobspressRouterFn): TobspressRouter {
+    this.attachRouter("PUT", path, fn);
+    return this;
+  }
 
-  delete(path: string, fn: {}) {}
+  delete(path: string, fn: TobspressRouterFn): TobspressRouter {
+    this.attachRouter("DELETE", path, fn);
+    return this;
+  }
 
   private attachRouter(
     method: Method | "USE",
