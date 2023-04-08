@@ -9,8 +9,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node test/app.ts",
-    "prestart": "tsc",
-    "dev": "tsc --watch",
+    "dev": "rollup -c --watch",
     "build": "rollup -c"
   },
   "devDependencies": {
