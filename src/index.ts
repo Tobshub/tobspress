@@ -205,14 +205,14 @@ export class TobspressRouter implements TobspressRouterType {
       this.children.set(
         method === "USE"
           ? { path: sanitizePath(path) }
-          : { path: sanitizePath(path), method: "POST" },
+          : { path: sanitizePath(path), method },
         new TobspressRouter(fn, undefined, method === "USE")
       );
     } else {
       this.children.set(
         method === "USE"
           ? { path: sanitizePath(path) }
-          : { path: sanitizePath(path), method: "POST" },
+          : { path: sanitizePath(path), method },
         new TobspressRouter(fn.handler, fn.router?.children, method === "USE")
       );
     }
