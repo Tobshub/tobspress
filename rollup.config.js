@@ -1,7 +1,7 @@
-import dts from "rollup-plugin-dts";
-import esbuild from "rollup-plugin-esbuild";
-import commonjs from "@rollup/plugin-commonjs";
-import packageJson from "./package.json" assert { type: "json" };
+const dts = require("rollup-plugin-dts").default;
+const esbuild = require("rollup-plugin-esbuild").default;
+const commonjs = require("@rollup/plugin-commonjs").default;
+const packageJson = require("./package.json");
 
 const name = packageJson.main.replace(/\.js$/, "");
 
@@ -11,7 +11,7 @@ const bundle = (config) => ({
   external: (id) => !/^[./]/.test(id),
 });
 
-export default [
+module.exports = [
   bundle({
     plugins: [
       esbuild({ minify: true }),
