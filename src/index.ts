@@ -6,9 +6,12 @@ import {
   TobsMap,
   TobspressRequest,
   TobspressResponse,
-  TobspressRouterFn,
+  type TobspressRouterFn,
 } from "./types";
 import path from "path";
+
+// export types that might me useful in API implementation
+export { Method, TobspressRequest, TobspressResponse, type TobspressRouterFn };
 
 /** The Tobspress instance */
 export default class Tobspress {
