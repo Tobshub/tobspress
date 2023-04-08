@@ -1,18 +1,47 @@
 {
-  "name": "tobspress",
+  "name": "@tobshub/tobspress",
   "version": "1.0.0",
   "description": "having fun trying to make my version of express",
-  "main": "dist/indexks",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "type": "module",
   "author": "Tobshub",
   "license": "MIT",
   "scripts": {
     "start": "ts-node test/app.ts",
     "prestart": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "build": "rollup -c"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
+    "esbuild": "^0.17.15",
+    "rollup": "^3.20.2",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/Tobshub/tobspress"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  },
+  "keywords": [
+    "http",
+    "api",
+    "express"
+  ],
+  "files": [
+    "./dist/*"
+  ]
 }

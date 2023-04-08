@@ -11,25 +11,27 @@ export class TobspressRequest {
    * */
   body: Promise<any>;
   headers: IncomingHttpHeaders;
+  method: Method;
+  url: string;
   constructor(readonly rawRequest: IncomingMessage) {
     this.body = this.parseBody();
     this.headers = this.rawRequest.headers;
+    /**
+     * HTTP request method
+     * Can only be "GET", "PUT", "DELETE", or "POST"
+     * If the request method is not listed above, it will default to a post
+     * */
+    this.method =
+      rawRequest.method === "GET"
+        ? "GET"
+        : rawRequest.method === "PUT"
+        ? "PUT"
+        : rawRequest.method === "DELETE"
+        ? "DELETE"
+        : "POST";
+    this.url = this.rawRequest.url?.substring(1) ?? "";
   }
 
-  /**
-   * HTTP request method
-   * Can only be "GET", "PUT", "DELETE", or "POST"
-   * If the request method is not listed above, it will default to a post
-   * */
-  method: Method =
-    this.rawRequest.method === "GET"
-      ? "GET"
-      : this.rawRequest.method === "PUT"
-      ? "PUT"
-      : this.rawRequest.method === "DELETE"
-      ? "DELETE"
-      : "POST";
-  url: string = (this.rawRequest.url ?? "").substring(1);
 
   async parseBody() {
     let raw_body = "";
