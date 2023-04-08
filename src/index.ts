@@ -14,7 +14,7 @@ import path from "path";
 export { Method, TobspressRequest, TobspressResponse, type TobspressRouterFn };
 
 /** The Tobspress instance */
-export default class Tobspress {
+class Tobspress {
   handler?: TobspressRequestHandler;
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   /** The path to the folder to look for static files in */
@@ -156,6 +156,8 @@ export default class Tobspress {
     this.staticFolderPath = staticFolder;
   }
 }
+
+export default Tobspress;
 
 /** Router to handle HTTP requests */
 export class TobspressRouter implements TobspressRouterType {
