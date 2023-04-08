@@ -23,7 +23,7 @@ The `Tobspress` instance exposes method that will be familiar if you have used a
 ```javascript
 import Tobspress, {TobspressRouter} from "@tobshub/tobspress";
 
-// exisiting code
+// existing code
 
 const helloRouter = new TobspressRouter();
 
