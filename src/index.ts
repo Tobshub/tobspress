@@ -14,6 +14,7 @@ import path from "path";
 export default class Tobspress {
   handler?: TobspressRequestHandler;
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
+  /** The path to the folder to look for static files in */
   private staticFolderPath: string;
   constructor() {
     this.children = new TobsMap();
@@ -21,6 +22,7 @@ export default class Tobspress {
     this.staticFolderPath = process.cwd();
   }
 
+  /** Listens on `port` for http requests */
   listen(port: number, callBack?: () => any) {
     this.init().listen(port, callBack);
   }
@@ -90,26 +92,31 @@ export default class Tobspress {
     response.status(404).send({ error: "NOT FOUND" });
   }
 
+  /** Attaches a non-method specific router */
   use(path: string, fn: TobspressRouterFn): Tobspress {
     this.attachRouter("USE", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP POST method router */
   post(path: string, fn: TobspressRouterFn): Tobspress {
     this.attachRouter("POST", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP GET method router */
   get(path: string, fn: TobspressRouterFn): Tobspress {
     this.attachRouter("GET", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP PUT method router */
   put(path: string, fn: TobspressRouterFn): Tobspress {
     this.attachRouter("PUT", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP DELETE method router */
   delete(path: string, fn: TobspressRouterFn): Tobspress {
     this.attachRouter("DELETE", path, fn);
     return this;
@@ -137,43 +144,53 @@ export default class Tobspress {
     }
   }
 
+  /**
+   * Sets the path to look for static files
+   * The path name is appended to `process.cwd()`
+   * */
   static(folderPath: string) {
     const staticFolder = path.join(process.cwd(), folderPath);
     this.staticFolderPath = staticFolder;
   }
 }
 
+/** Router to handle HTTP requests */
 export class TobspressRouter implements TobspressRouterType {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   constructor(
     readonly handler?: TobspressRequestHandler,
     children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>,
+    /** Whether the router should catch child paths that are not defined */
     readonly catchAll?: boolean
   ) {
     this.children = children ?? new TobsMap();
   }
 
+  /** Attaches a non-method specific router */
   use(path: string, fn: TobspressRouterFn): TobspressRouter {
     this.attachRouter("USE", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP GET method router */
   get(path: string, fn: TobspressRouterFn): TobspressRouter {
     this.attachRouter("GET", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP POST method router */
   post(path: string, fn: TobspressRouterFn): TobspressRouter {
     this.attachRouter("POST", path, fn);
     return this;
   }
 
-  // TODO: implement the following
+  /** Attaches a HTTP PUT method router */
   put(path: string, fn: TobspressRouterFn): TobspressRouter {
     this.attachRouter("PUT", path, fn);
     return this;
   }
 
+  /** Attaches a HTTP DELETE method router */
   delete(path: string, fn: TobspressRouterFn): TobspressRouter {
     this.attachRouter("DELETE", path, fn);
     return this;
