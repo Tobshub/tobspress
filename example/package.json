@@ -1,0 +1,20 @@
+{
+  "name": "@tobshub/tobspress-example",
+  "version": "1.0.0",
+  "description": "example usage of @tobshub/tobspress package",
+  "main": "src/index.ts",
+  "repository": "https://github.com/Tobshub/tobspress",
+  "author": "Tobshub",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@tobshub/tobspress": "^1.2.2"
+  }
+}
