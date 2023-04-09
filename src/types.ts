@@ -6,7 +6,7 @@ export const enum Method {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
-  DELETE = "DELETE"
+  DELETE = "DELETE",
 }
 
 /** Wrapper for `http.IncomingMessage` request */
@@ -36,7 +36,6 @@ export class TobspressRequest {
         : Method.POST;
     this.url = this.rawRequest.url?.substring(1) ?? "";
   }
-
 
   async parseBody() {
     let raw_body = "";
@@ -157,6 +156,7 @@ export type TobspressRequestHandler = (
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;
   children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
+  middlewares: TobspressRequestHandler[];
   catchAll?: boolean;
 };
 

@@ -19,10 +19,7 @@ class Tobspress {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   /** The path to the folder to look for static files in */
   private staticFolderPath: string;
-  private middlewares: ((
-    req: TobspressRequest,
-    res: TobspressResponse
-  ) => Promise<void> | void)[];
+  middlewares: TobspressRequestHandler[];
   constructor() {
     this.children = new TobsMap();
     this.handleRequest = this.handleRequest.bind(this);
@@ -47,6 +44,7 @@ class Tobspress {
     const url = splitPath(request.url);
 
     let router: TobspressRouterType | undefined = this;
+    const routeMiddlewares = this.middlewares;
     let searchPath = "";
 
     if (!url.length) {
@@ -87,6 +85,7 @@ class Tobspress {
         } else if (i === url.length - 1 && !router?.catchAll) {
           router = undefined;
         }
+        if (router) routeMiddlewares.push(...router.middlewares);
       }
     }
 
@@ -169,13 +168,16 @@ class Tobspress {
 
   // TODO:
   /** Attach middleware that runs on every request before it's router code if any  */
-  attach(middlewares: []) {}
+  attach(middlewares: TobspressRequestHandler[]) {
+    this.middlewares.push(...middlewares);
+  }
 }
 
 export default Tobspress;
 
 /** Router interface that is initialized with its handlers and children */
 class TobspressChildRouter implements TobspressRouterType {
+  middlewares: TobspressRequestHandler[];
   constructor(
     public readonly handler?: TobspressRequestHandler,
     public readonly children?: TobsMap<
@@ -184,14 +186,18 @@ class TobspressChildRouter implements TobspressRouterType {
     >,
     /** Whether the router should catch child paths that are not defined */
     public readonly catchAll?: boolean
-  ) {}
+  ) {
+    this.middlewares = [];
+  }
 }
 
 /** Router to handle HTTP requests */
 export class TobspressRouter implements TobspressRouterType {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
+  middlewares: TobspressRequestHandler[];
   constructor() {
     this.children = new TobsMap();
+    this.middlewares = [];
   }
 
   /** Attaches a non-method specific router */
@@ -248,6 +254,10 @@ export class TobspressRouter implements TobspressRouterType {
         )
       );
     }
+  }
+
+  attach(middlewares: TobspressRequestHandler[]) {
+    this.middlewares.push(...middlewares);
   }
 }
 
