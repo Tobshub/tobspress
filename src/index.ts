@@ -90,6 +90,7 @@ class Tobspress {
     }
 
     if (router && router.handler) {
+      routeMiddlewares.forEach((fn) => fn(request, response));
       await router.handler(request, response);
       return;
     }
