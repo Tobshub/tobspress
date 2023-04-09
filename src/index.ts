@@ -169,6 +169,7 @@ class Tobspress {
 
   // TODO:
   /** Attach middleware that runs on every request before it's router code if any  */
+  attach(middlewares: []) {}
 }
 
 export default Tobspress;
