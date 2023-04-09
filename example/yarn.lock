@@ -27,10 +27,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@tobshub/tobspress@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@tobshub/tobspress/-/tobspress-1.2.2.tgz#f55ec1531b766861138d78f8cc672598f3ba354d"
-  integrity sha512-eCbZ3bTmH43mtosXHD9Al/btiXQH5mmpnafdOlaHmx3xu5DHe/Sa9VSm6jfhsG3DL2AqScqldMiASMrQtH0j0w==
+"@tobshub/tobspress@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tobshub/tobspress/-/tobspress-2.0.0.tgz#2455a8571a250caef656327eb541f064ce365109"
+  integrity sha512-ACkVyGIbXa4W0stukrOsFq4OqpKm/uqAYVBX5ZGBo0BhkslngrUGiH1QXhg6Ohihi7+Gg9DlDIQJv4xFSJtUWw==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
