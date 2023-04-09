@@ -49,7 +49,7 @@ class Tobspress {
         router = router.children.get({ path: "" });
       } else if (
         router &&
-        router.children && 
+        router.children &&
         router.children.has({ path: "", method: request.method })
       ) {
         router = router.children.get({ path: "", method: request.method });
@@ -58,7 +58,11 @@ class Tobspress {
       for (let i = 0; i < url.length; i++) {
         let path = url[i];
         searchPath = searchPath.length ? searchPath.concat("/", path) : path;
-        if (router && router.children && router.children.has({ path: searchPath })) {
+        if (
+          router &&
+          router.children &&
+          router.children.has({ path: searchPath })
+        ) {
           router = router.children.get({
             path: searchPath,
           }) as TobspressRouterType;
@@ -228,7 +232,11 @@ export class TobspressRouter implements TobspressRouterType {
         method === "USE"
           ? { path: sanitizePath(path) }
           : { path: sanitizePath(path), method },
-        new TobspressChildRouter(fn.handler, fn.router?.children, method === "USE")
+        new TobspressChildRouter(
+          fn.handler,
+          fn.router?.children,
+          method === "USE"
+        )
       );
     }
   }
