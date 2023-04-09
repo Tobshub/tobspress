@@ -156,7 +156,7 @@ export type TobspressRequestHandler = (
 
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;
-  children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
+  children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   catchAll?: boolean;
 };
 

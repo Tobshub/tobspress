@@ -40,15 +40,16 @@ class Tobspress {
     const response = new TobspressResponse(res);
     // search for the req path in `this.routers`
     const url = splitPath(request.url);
-    
+
     let router: TobspressRouterType | undefined = this;
     let searchPath = "";
 
     if (!url.length) {
-      if (router && router.children.has({ path: "" })) {
+      if (router && router.children && router.children.has({ path: "" })) {
         router = router.children.get({ path: "" });
       } else if (
         router &&
+        router.children && 
         router.children.has({ path: "", method: request.method })
       ) {
         router = router.children.get({ path: "", method: request.method });
@@ -57,7 +58,7 @@ class Tobspress {
       for (let i = 0; i < url.length; i++) {
         let path = url[i];
         searchPath = searchPath.length ? searchPath.concat("/", path) : path;
-        if (router && router.children.has({ path: searchPath })) {
+        if (router && router.children && router.children.has({ path: searchPath })) {
           router = router.children.get({
             path: searchPath,
           }) as TobspressRouterType;
@@ -65,6 +66,7 @@ class Tobspress {
           searchPath = "";
         } else if (
           router &&
+          router.children &&
           router.children.has({ path: searchPath, method: request.method })
         ) {
           router = router.children.get({
@@ -135,14 +137,14 @@ class Tobspress {
         method === "USE"
           ? { path: sanitizePath(path) }
           : { path: sanitizePath(path), method },
-        new TobspressRouter(fn, undefined, method === "USE")
+        new TobspressChildRouter(fn, undefined, method === "USE")
       );
     } else {
       this.children.set(
         method === "USE"
           ? { path: sanitizePath(path) }
           : { path: sanitizePath(path), method },
-        new TobspressRouter(fn.handler, fn.router?.children)
+        new TobspressChildRouter(fn.handler, fn.router?.children)
       );
     }
   }
@@ -159,16 +161,24 @@ class Tobspress {
 
 export default Tobspress;
 
+/** Router interface that is initialized with its handlers and children */
+class TobspressChildRouter implements TobspressRouterType {
+  constructor(
+    public readonly handler?: TobspressRequestHandler,
+    public readonly children?: TobsMap<
+      { path: string; method?: Method },
+      TobspressRouterType
+    >,
+    /** Whether the router should catch child paths that are not defined */
+    public readonly catchAll?: boolean
+  ) {}
+}
+
 /** Router to handle HTTP requests */
 export class TobspressRouter implements TobspressRouterType {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
-  constructor(
-    readonly handler?: TobspressRequestHandler,
-    children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>,
-    /** Whether the router should catch child paths that are not defined */
-    readonly catchAll?: boolean
-  ) {
-    this.children = children ?? new TobsMap();
+  constructor() {
+    this.children = new TobsMap();
   }
 
   /** Attaches a non-method specific router */
@@ -211,14 +221,14 @@ export class TobspressRouter implements TobspressRouterType {
         method === "USE"
           ? { path: sanitizePath(path) }
           : { path: sanitizePath(path), method },
-        new TobspressRouter(fn, undefined, method === "USE")
+        new TobspressChildRouter(fn, undefined, method === "USE")
       );
     } else {
       this.children.set(
         method === "USE"
           ? { path: sanitizePath(path) }
           : { path: sanitizePath(path), method },
-        new TobspressRouter(fn.handler, fn.router?.children, method === "USE")
+        new TobspressChildRouter(fn.handler, fn.router?.children, method === "USE")
       );
     }
   }
