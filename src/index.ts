@@ -19,10 +19,15 @@ class Tobspress {
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   /** The path to the folder to look for static files in */
   private staticFolderPath: string;
+  private middlewares: ((
+    req: TobspressRequest,
+    res: TobspressResponse
+  ) => Promise<void> | void)[];
   constructor() {
     this.children = new TobsMap();
     this.handleRequest = this.handleRequest.bind(this);
     this.staticFolderPath = process.cwd();
+    this.middlewares = [];
   }
 
   /** Listens on `port` for http requests */
@@ -161,6 +166,9 @@ class Tobspress {
     const staticFolder = path.join(process.cwd(), folderPath);
     this.staticFolderPath = staticFolder;
   }
+
+  // TODO:
+  /** Attach middleware that runs on every request before it's router code if any  */
 }
 
 export default Tobspress;
