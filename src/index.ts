@@ -70,7 +70,7 @@ class Tobspress {
         ) {
           router = router.children.get({
             path: searchPath,
-          }) as TobspressRouterType;
+          });
           // reset searchPath
           searchPath = "";
         } else if (
@@ -81,7 +81,7 @@ class Tobspress {
           router = router.children.get({
             path: searchPath,
             method: request.method,
-          }) as TobspressRouterType;
+          });
           // reset searchPath
           searchPath = "";
         } else if (i === url.length - 1 && !router?.catchAll) {
