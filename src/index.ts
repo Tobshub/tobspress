@@ -95,6 +95,19 @@ class Tobspress {
     if (router && router.handler) {
       await router.handler(request, response);
       return;
+    } else if (
+      router &&
+      router.children &&
+      (router.children.has({ path: "/" }) ||
+        router.children.has({ path: "/", method: request.method }))
+    ) {
+      const handler =
+        router.children.get({ path: "/" })?.handler ??
+        router.children.get({ path: "/", method: request.method })?.handler;
+      if (handler) {
+        await handler(request, response);
+        return;
+      }
     }
 
     // as a last resort, treat the url as a static file path
