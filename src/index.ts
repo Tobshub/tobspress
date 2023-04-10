@@ -101,6 +101,7 @@ class Tobspress {
       (router.children.has({ path: "" }) ||
         router.children.has({ path: "", method: request.method }))
     ) {
+      // attempt to use child router on path "/" if router found but no handler
       const handler =
         router.children.get({ path: "" })?.handler ??
         router.children.get({ path: "", method: request.method })?.handler;
