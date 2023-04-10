@@ -62,9 +62,9 @@ class Tobspress {
     // transform `req` & `res` to their Tobspress counterparts
     const request = new TobspressRequest(req);
     const response = new TobspressResponse(res);
-    this.log(request.method, "request, url:", "/".concat(request.url));
+    this.log(request.method, "request, url:", request.url);
     // search for the req path in `this.routers`
-    const url = splitPath(request.url);
+    const url = splitPath(request.url.substring(1));
 
     let router: TobspressRouterType | undefined = this;
     const routeMiddlewares = this.middlewares;
@@ -130,7 +130,7 @@ class Tobspress {
         router.children.get({ path: "", method: request.method })?.handler;
       if (handler) {
         await handler(request, response);
-        this.log(request.method, "request done for:", "/".concat(request.url));
+        this.log(request.method, "request done for:", request.url);
         return;
       }
     }
@@ -147,7 +147,7 @@ class Tobspress {
     this.log(
       request.method,
       "request done for:",
-      "/".concat(request.url),
+      request.url,
       foundFile && "not found"
     );
   }

@@ -45,7 +45,7 @@ export class TobspressRequest {
         : rawRequest.method === "DELETE"
         ? Method.DELETE
         : Method.POST;
-    this.url = this.rawRequest.url?.substring(1) ?? "";
+    this.url = this.rawRequest.url ?? "/";
   }
 
   async parseBody() {
