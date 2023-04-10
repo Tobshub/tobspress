@@ -48,7 +48,8 @@ class Tobspress {
     this.log("Listening on port", port);
   }
 
-  log(...args: any) {
+  /** Optional Logger, Logs if options.log is `true` */
+  private log(...args: any) {
     optionalExecute(this.options?.log, () => tobspressLog(...args));
   }
 
