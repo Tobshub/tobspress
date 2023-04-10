@@ -14,6 +14,7 @@ export const optionalExecute = (
   if (condition) fn();
 };
 
+/** Log with Tobspress tag and timestamp */
 export const tobspressLog = (...args: any) => {
-  console.log("[Tobspress]", ...args);
+  console.log("[Tobspress]", new Date(), ...args);
 };
