@@ -98,12 +98,12 @@ class Tobspress {
     } else if (
       router &&
       router.children &&
-      (router.children.has({ path: "/" }) ||
-        router.children.has({ path: "/", method: request.method }))
+      (router.children.has({ path: "" }) ||
+        router.children.has({ path: "", method: request.method }))
     ) {
       const handler =
-        router.children.get({ path: "/" })?.handler ??
-        router.children.get({ path: "/", method: request.method })?.handler;
+        router.children.get({ path: "" })?.handler ??
+        router.children.get({ path: "", method: request.method })?.handler;
       if (handler) {
         await handler(request, response);
         return;
