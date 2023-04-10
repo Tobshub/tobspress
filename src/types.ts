@@ -1,6 +1,7 @@
 import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import fs from "fs/promises";
+import { tobspressLog } from "./helpers";
 
 export type TobspressOptions = {
   /** Use built-in request logging */
@@ -63,7 +64,7 @@ export class TobspressRequest {
       body = raw_body ? JSON.parse(raw_body) : null;
     } catch (error) {
       // not json
-      console.error("Error: Could not parse request body", error);
+      tobspressLog("Error: Could not parse request body", error);
     }
     return body;
   }
