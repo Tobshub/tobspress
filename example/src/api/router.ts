@@ -1,0 +1,9 @@
+import { TobspressRouter } from "../../../dist/index.js";
+
+const apiRouter = new TobspressRouter();
+
+apiRouter.get("/health", (req, res) => {
+  res.send({ message: "As you can see, I'm health asf" });
+});
+
+export default apiRouter;

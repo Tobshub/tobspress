@@ -1,14 +1,12 @@
-import Tobspress, { TobspressRouter } from "@tobshub/tobspress";
+import Tobspress from "../../dist/index.js";
+import apiRouter from "./api/router";
 
-const app = new Tobspress();
+const app = new Tobspress({ log: true });
+
+app.static("public");
 
 app.use("/", (req, res) => {
-  res.sendFile("index.html");
-});
-
-const echoRouter = new TobspressRouter();
-echoRouter.use("/hello/world", (req, res) => {
-  res.send("Come on! That's too easy.");
+  res.sendFile("./public/index.html");
 });
 
 app.use("echo", (req, res) => {
@@ -27,6 +25,6 @@ app.use("echo", (req, res) => {
   res.send({ message: "Append text to the url to make me say stuff!" });
 });
 
-app.listen(4000, () => {
-  console.log("LIVE port(4000)");
-});
+app.use("/api", { router: apiRouter });
+
+app.listen(4000);
