@@ -1,4 +1,4 @@
-import Tobspress from "../../dist/index.js";
+import Tobspress from "@tobshub/tobspress";
 import apiRouter from "./api/router";
 
 const app = new Tobspress({ log: true });

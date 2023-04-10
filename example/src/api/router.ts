@@ -1,4 +1,4 @@
-import { TobspressRouter } from "../../../dist/index.js";
+import { TobspressRouter } from "@tobshub/tobspress";
 
 const apiRouter = new TobspressRouter();
 
