@@ -3,6 +3,7 @@
 
 <head>
   <title>Tobspress Example Usage</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
@@ -10,6 +11,11 @@
   <p>The API renders this html page on the "/" route</p>
   <p>You can also fetch the page by going to "/index.html"</p>
   <button id="js-button">DO JS THINGS</button>
+
+  <form id="form" method="post" action="/api/form">
+    <input id="input" placeholder="type anything" />
+    <button type="submit">SUBMIT</button>
+  </form>
 
   <script src="./script.js"></script>
 </body>
