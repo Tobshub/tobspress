@@ -2,6 +2,17 @@ import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import fs from "fs/promises";
 
+export type TobspressOptions = {
+  /** Use built-in request logging */
+  log?: boolean;
+  /**
+   * Prevent child routers handling requests for their parent
+   *
+   * With `strictRouting` set to `true`, child routers set to "/" have no effect
+   * */
+  strictRouting?: boolean;
+};
+
 export const enum Method {
   GET = "GET",
   POST = "POST",

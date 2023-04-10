@@ -1,5 +1,10 @@
 import { Server, IncomingMessage, ServerResponse, createServer } from "http";
-import { splitPath, sanitizePath } from "./helpers";
+import {
+  splitPath,
+  sanitizePath,
+  optionalExecute,
+  tobspressLog,
+} from "./helpers";
 import { TobspressChildRouter, TobspressRouter } from "./router";
 import {
   type TobspressRouterType,
@@ -9,6 +14,7 @@ import {
   TobspressRequest,
   TobspressResponse,
   type TobspressRouterFn,
+  type TobspressOptions,
 } from "./types";
 import path from "path";
 
@@ -19,6 +25,7 @@ export {
   TobspressResponse,
   type TobspressRouterFn,
   TobspressRouter,
+  type TobspressOptions,
 };
 
 /** The Tobspress instance */
@@ -28,7 +35,7 @@ class Tobspress {
   /** The path to the folder to look for static files in */
   private staticFolderPath: string;
   middlewares: TobspressRequestHandler[];
-  constructor() {
+  constructor(private readonly options?: TobspressOptions) {
     this.children = new TobsMap();
     this.handleRequest = this.handleRequest.bind(this);
     this.staticFolderPath = process.cwd();
@@ -38,9 +45,15 @@ class Tobspress {
   /** Listens on `port` for http requests */
   listen(port: number, callBack?: () => any) {
     this.init().listen(port, callBack);
+    this.log("Listening on port", port);
+  }
+
+  log(...args: any) {
+    optionalExecute(this.options?.log, () => tobspressLog(...args));
   }
 
   private init(): Server {
+    this.log("Starting App...");
     return createServer(this.handleRequest);
   }
 
