@@ -15,6 +15,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@tobshub/tobspress": "^2.1.0"
+    "@tobshub/tobspress": "^2.1.4"
   }
 }
