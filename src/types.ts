@@ -30,9 +30,11 @@ export class TobspressRequest {
   headers: IncomingHttpHeaders;
   method: Method;
   url: string;
+  id: string;
   constructor(readonly rawRequest: IncomingMessage) {
     this.body = this.parseBody();
     this.headers = this.rawRequest.headers;
+    this.id = (Math.random() + 1).toString(36).substring(2);
     /**
      * HTTP request method
      * Can only be "GET", "PUT", "DELETE", or "POST"
