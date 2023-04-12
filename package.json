@@ -1,6 +1,6 @@
 {
   "name": "@tobshub/tobspress",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Nodejs HTTP Client for building REST APIs",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
