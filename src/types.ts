@@ -30,11 +30,11 @@ export class TobspressRequest {
   headers: IncomingHttpHeaders;
   method: Method;
   url: string;
-  id: string;
+  id: number;
   constructor(readonly rawRequest: IncomingMessage) {
     this.body = this.parseBody();
     this.headers = this.rawRequest.headers;
-    this.id = (Math.random() + 1).toString(36).substring(2);
+    this.id = parseInt((Math.random() * 10000).toFixed(0));
     /**
      * HTTP request method
      * Can only be "GET", "PUT", "DELETE", or "POST"
@@ -44,10 +44,10 @@ export class TobspressRequest {
       rawRequest.method === "GET"
         ? Method.GET
         : rawRequest.method === "PUT"
-        ? Method.PUT
-        : rawRequest.method === "DELETE"
-        ? Method.DELETE
-        : Method.POST;
+          ? Method.PUT
+          : rawRequest.method === "DELETE"
+            ? Method.DELETE
+            : Method.POST;
     this.url = this.rawRequest.url ?? "/";
   }
 
@@ -66,7 +66,7 @@ export class TobspressRequest {
       body = raw_body ? JSON.parse(raw_body) : null;
     } catch (error) {
       // not json
-      tobspressLog("Error: Could not parse request body", error);
+      tobspressLog([this.id], "Error: Could not parse request body", error);
     }
     return body;
   }

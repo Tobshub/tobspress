@@ -62,7 +62,7 @@ class Tobspress {
     // transform `req` & `res` to their Tobspress counterparts
     const request = new TobspressRequest(req);
     const response = new TobspressResponse(res);
-    this.log("new", request.method, "request", request.id, request.url);
+    this.log([request.id], "new", request.method, "request:", request.url);
     // search for the req path in `this.routers`
     const url = splitPath(request.url.substring(1));
 
@@ -130,7 +130,7 @@ class Tobspress {
         router.children.get({ path: "", method: request.method })?.handler;
       if (handler) {
         await handler(request, response);
-        this.log(request.method, "request done", request.id);
+        this.log([request.id], request.method, "request done");
         return;
       }
     }
@@ -145,9 +145,9 @@ class Tobspress {
     // return 404 if no handler or file is found
     response.status(404).send({ error: "NOT FOUND" });
     this.log(
+      [request.id],
       request.method,
       "request done",
-      request.id,
       !foundFile && "not found"
     );
   }
