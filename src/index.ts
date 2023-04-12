@@ -117,6 +117,7 @@ class Tobspress {
 
     if (router && router.handler) {
       await router.handler(request, response);
+      this.log([request.id], request.method, "request done");
       return;
     } else if (
       router &&
