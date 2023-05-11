@@ -1,6 +1,5 @@
 import { Server, IncomingMessage, ServerResponse, createServer } from "http";
 import path from "path";
-import fs from "fs/promises";
 import { splitPath, sanitizePath, tobspressLog } from "./helpers";
 import { TobspressChildRouter, TobspressRouter } from "./router";
 import {
@@ -132,13 +131,12 @@ class Tobspress {
     else if (
       await response.sendFile(path.join(this.staticFolderPath, request.url))
     ) {
-      this.log([request.id], "Found file:", request.url);
     } else {
       // return 404 if no handler or file is found
       response.status(404).send({ error: "NOT FOUND" });
     }
 
-    this.log([request.id], "Done in", (Date.now() - request.time) / 1000);
+    this.log([request.id], "Done in", (Date.now() - request.time) / 1000, "status:", response.code);
   }
 
   /** Attaches a non-method specific router */
