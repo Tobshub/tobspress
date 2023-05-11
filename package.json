@@ -10,7 +10,8 @@
     "start": "ts-node test/app.ts",
     "dev": "rollup -c --watch",
     "build": "rollup -c",
-    "npm-pub": "pnpm build && npm publish"
+    "npm-pub": "pnpm build && npm publish",
+    "example": "cd ./example && pnpm start"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
