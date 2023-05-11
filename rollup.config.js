@@ -14,7 +14,7 @@ const bundle = (config) => ({
 module.exports = [
   bundle({
     plugins: [
-      esbuild({ minify: true }),
+      esbuild(),
       commonjs({ esmExternals: true, requireReturnsDefault: true }),
     ],
     output: [
