@@ -26,7 +26,7 @@ app.use("/echo", (req, res) => {
   res.send({ message: "Append text to the url to make me say stuff!" });
 });
 
-app.use("/", (req, res) => {
+app.use("/", (_, res) => {
   res.sendFile("./public/index.html");
 });
 
