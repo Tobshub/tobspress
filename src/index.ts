@@ -2,7 +2,6 @@ import { Server, IncomingMessage, ServerResponse, createServer } from "http";
 import {
   splitPath,
   sanitizePath,
-  optionalExecute,
   tobspressLog,
 } from "./helpers";
 import { TobspressChildRouter, TobspressRouter } from "./router";
@@ -50,7 +49,9 @@ class Tobspress {
 
   /** Optional Logger, Logs if options.log is `true` */
   private log(...args: any) {
-    optionalExecute(this.options?.log, () => tobspressLog(...args));
+    if (this.options?.log) {
+      tobspressLog(...args)
+    }
   }
 
   private init(): Server {
