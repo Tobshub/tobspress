@@ -1,10 +1,7 @@
 import { Server, IncomingMessage, ServerResponse, createServer } from "http";
 import path from "path";
-import {
-  splitPath,
-  sanitizePath,
-  tobspressLog,
-} from "./helpers";
+import fs from "fs/promises";
+import { splitPath, sanitizePath, tobspressLog } from "./helpers";
 import { TobspressChildRouter, TobspressRouter } from "./router";
 import {
   type TobspressRouterType,
@@ -48,7 +45,7 @@ class Tobspress {
   /** Optional Logger, Logs if options.log is `true` */
   private log(...args: any) {
     if (this.options?.log) {
-      tobspressLog(...args)
+      tobspressLog(...args);
     }
   }
 
@@ -61,7 +58,7 @@ class Tobspress {
     // transform `req` & `res` to their Tobspress counterparts
     const request = new TobspressRequest(req);
     const response = new TobspressResponse(res);
-    this.log([request.id], "new", request.method, "request:", request.url);
+    this.log([request.id], request.method, request.url);
     // search for the req path in `this.routers`
     const url = splitPath(request.url.substring(1));
 
@@ -116,8 +113,6 @@ class Tobspress {
 
     if (router && router.handler) {
       await router.handler(request, response);
-      this.log([request.id], request.method, "request done");
-      return;
     } else if (
       router &&
       router.children &&
@@ -130,26 +125,20 @@ class Tobspress {
         router.children.get({ path: "", method: request.method })?.handler;
       if (handler) {
         await handler(request, response);
-        this.log([request.id], request.method, "request done");
         return;
       }
     }
-
     // as a last resort, treat the url as a static file path
-    const foundFile = await response.sendFile(
-      path.join(this.staticFolderPath, request.url)
-    );
+    else if (
+      await response.sendFile(path.join(this.staticFolderPath, request.url))
+    ) {
+      this.log([request.id], "Found file:", request.url);
+    } else {
+      // return 404 if no handler or file is found
+      response.status(404).send({ error: "NOT FOUND" });
+    }
 
-    if (foundFile) return;
-
-    // return 404 if no handler or file is found
-    response.status(404).send({ error: "NOT FOUND" });
-    this.log(
-      [request.id],
-      request.method,
-      "request done",
-      !foundFile && "not found"
-    );
+    this.log([request.id], "Done in", (Date.now() - request.time) / 1000);
   }
 
   /** Attaches a non-method specific router */
