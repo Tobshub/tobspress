@@ -1,4 +1,5 @@
 import { Server, IncomingMessage, ServerResponse, createServer } from "http";
+import path from "path";
 import {
   splitPath,
   sanitizePath,
@@ -8,14 +9,11 @@ import { TobspressChildRouter, TobspressRouter } from "./router";
 import {
   type TobspressRouterType,
   type TobspressRequestHandler,
-  Method,
   TobsMap,
-  TobspressRequest,
-  TobspressResponse,
   type TobspressRouterFn,
   type TobspressOptions,
 } from "./types";
-import path from "path";
+import { Method, TobspressRequest, TobspressResponse } from "./http";
 
 // export types that might me useful in API implementation
 export {

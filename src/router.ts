@@ -2,10 +2,10 @@ import { sanitizePath } from "./helpers";
 import {
   type TobspressRouterType,
   type TobspressRequestHandler,
-  Method,
   TobsMap,
   type TobspressRouterFn,
 } from "./types";
+import { Method } from "./http";
 
 /** Router to handle HTTP requests */
 export class TobspressRouter implements TobspressRouterType {
