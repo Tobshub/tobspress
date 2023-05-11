@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@tobshub/tobspress':
-    specifier: ^2.1.4
-    version: 2.1.4
+    specifier: ^2.2.1
+    version: 2.2.1
 
 devDependencies:
   '@types/node':
@@ -41,8 +41,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@tobshub/tobspress@2.1.4:
-    resolution: {integrity: sha512-1sGz6iqZSMUu3Zuz1HFsuZmmU6b9y9sAs6mOpUiCYc8W+odhu2LQNzilz1DktCduVkfDfrI2XZC5EdscTFzfPQ==}
+  /@tobshub/tobspress@2.2.1:
+    resolution: {integrity: sha512-gEOyKSrNKhhjk3/GSKcJ+K/QUauzutgKmUu/I99v3TJ3OFyXNpKawdXgtX+Axpdmzy95b6DnBd/thg2UTQMCUQ==}
     engines: {node: '>=16', npm: '>=8'}
     dev: false
 
