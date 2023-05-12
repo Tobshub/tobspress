@@ -5,5 +5,5 @@ export default async function bodyLog(
   _res: TobspressResponse
 ) {
   if (req.method === "GET") return;
-  console.log(req.url, await req.body, req.url);
+  console.log(req.url, await req.body);
 }
