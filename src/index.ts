@@ -12,14 +12,7 @@ import {
 import { Method, TobspressRequest, TobspressResponse } from "./http";
 
 // export types that might me useful in API implementation
-export {
-  Method,
-  TobspressRequest,
-  TobspressResponse,
-  type TobspressRouterFn,
-  TobspressRouter,
-  type TobspressOptions,
-};
+export { Method, TobspressRequest, TobspressResponse, type TobspressRouterFn, TobspressRouter, type TobspressOptions };
 // TODO: generate random id for each request
 /** The Tobspress instance */
 class Tobspress {
@@ -68,32 +61,19 @@ class Tobspress {
     if (!url.length) {
       if (router && router.children && router.children.has({ path: "" })) {
         router = router.children.get({ path: "" });
-      } else if (
-        router &&
-        router.children &&
-        router.children.has({ path: "", method: request.method })
-      ) {
+      } else if (router && router.children && router.children.has({ path: "", method: request.method })) {
         router = router.children.get({ path: "", method: request.method });
       }
     } else {
-      for (let i = 0; i < url.length; i++) {
-        let path = url[i];
+      url.forEach((path, i) => {
         searchPath = searchPath.length ? searchPath.concat("/", path) : path;
-        if (
-          router &&
-          router.children &&
-          router.children.has({ path: searchPath })
-        ) {
+        if (router && router.children && router.children.has({ path: searchPath })) {
           router = router.children.get({
             path: searchPath,
           });
           // reset searchPath
           searchPath = "";
-        } else if (
-          router &&
-          router.children &&
-          router.children.has({ path: searchPath, method: request.method })
-        ) {
+        } else if (router && router.children && router.children.has({ path: searchPath, method: request.method })) {
           router = router.children.get({
             path: searchPath,
             method: request.method,
@@ -104,7 +84,7 @@ class Tobspress {
           router = undefined;
         }
         if (router) routeMiddlewares.push(...router.middlewares);
-      }
+      });
     }
 
     // call middlewares
@@ -115,8 +95,7 @@ class Tobspress {
     } else if (
       router &&
       router.children &&
-      (router.children.has({ path: "" }) ||
-        router.children.has({ path: "", method: request.method }))
+      (router.children.has({ path: "" }) || router.children.has({ path: "", method: request.method }))
     ) {
       // attempt to use child router on path "/" if router found but no handler
       const handler =
@@ -128,9 +107,7 @@ class Tobspress {
       }
     }
     // as a last resort, treat the url as a static file path
-    else if (
-      await response.sendFile(path.join(this.staticFolderPath, request.url))
-    ) {
+    else if (await response.sendFile(path.join(this.staticFolderPath, request.url))) {
     } else {
       // return 404 if no handler or file is found
       response.status(404).send({ error: "NOT FOUND" });
@@ -169,28 +146,16 @@ class Tobspress {
     return this;
   }
 
-  private attachRouter(
-    method: Method | "USE",
-    path: string,
-    fn: TobspressRouterFn
-  ) {
+  private attachRouter(method: Method | "USE", path: string, fn: TobspressRouterFn) {
     if (typeof fn === "function") {
       this.children.set(
-        method === "USE"
-          ? { path: sanitizePath(path) }
-          : { path: sanitizePath(path), method },
+        method === "USE" ? { path: sanitizePath(path) } : { path: sanitizePath(path), method },
         new TobspressChildRouter(fn, undefined, [], method === "USE")
       );
     } else {
       this.children.set(
-        method === "USE"
-          ? { path: sanitizePath(path) }
-          : { path: sanitizePath(path), method },
-        new TobspressChildRouter(
-          fn.handler,
-          fn.router?.children,
-          fn.router?.middlewares
-        )
+        method === "USE" ? { path: sanitizePath(path) } : { path: sanitizePath(path), method },
+        new TobspressChildRouter(fn.handler, fn.router?.children, fn.router?.middlewares)
       );
     }
   }
