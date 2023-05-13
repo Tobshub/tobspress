@@ -150,14 +150,15 @@ class Tobspress {
   }
 
   private attachRouter(method: Method | "USE", path: string, fn: TobspressRouterFn) {
+    path = sanitizePath(path);
     if (typeof fn === "function") {
       this.children.set(
-        method === "USE" ? { path: sanitizePath(path) } : { path: sanitizePath(path), method },
+        method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(fn, undefined, [], method === "USE")
       );
     } else {
       this.children.set(
-        method === "USE" ? { path: sanitizePath(path) } : { path: sanitizePath(path), method },
+        method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(fn.handler, fn.router?.children, fn.router?.middlewares)
       );
     }
