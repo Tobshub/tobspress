@@ -11,6 +11,8 @@ export type TobspressOptions = {
   strictRouting?: boolean;
 };
 
+export type TobspressRouteOptions = { catchAll?: boolean };
+
 export const mimeType: { [key: string]: string } = {
   ".ico": "image/x-icon",
   ".html": "text/html",
@@ -29,10 +31,7 @@ export const mimeType: { [key: string]: string } = {
   ".ttf": "application/x-font-ttf",
 };
 
-export type TobspressRequestHandler = (
-  req: TobspressRequest,
-  res: TobspressResponse
-) => Promise<void> | void;
+export type TobspressRequestHandler = (req: TobspressRequest, res: TobspressResponse) => Promise<void> | void;
 
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;

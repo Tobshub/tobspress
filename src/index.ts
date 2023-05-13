@@ -8,6 +8,7 @@ import {
   TobsMap,
   type TobspressRouterFn,
   type TobspressOptions,
+  TobspressRouteOptions,
 } from "./types";
 import { Method, TobspressRequest, TobspressResponse } from "./http";
 
@@ -120,41 +121,41 @@ class Tobspress {
   }
 
   /** Attaches a non-method specific router */
-  use(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter("USE", path, fn);
+  use(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+    this.attachRouter("USE", path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP POST method router */
-  post(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter(Method.POST, path, fn);
+  post(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+    this.attachRouter(Method.POST, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP GET method router */
-  get(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter(Method.GET, path, fn);
+  get(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+    this.attachRouter(Method.GET, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
-  put(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter(Method.PUT, path, fn);
+  put(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+    this.attachRouter(Method.PUT, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP DELETE method router */
-  delete(path: string, fn: TobspressRouterFn): Tobspress {
-    this.attachRouter(Method.DELETE, path, fn);
+  delete(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+    this.attachRouter(Method.DELETE, path, fn, options);
     return this;
   }
 
-  private attachRouter(method: Method | "USE", path: string, fn: TobspressRouterFn) {
+  private attachRouter(method: Method | "USE", path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined) {
     path = sanitizePath(path);
     if (typeof fn === "function") {
       this.children.set(
         method === "USE" ? { path } : { path, method },
-        new TobspressChildRouter(fn, undefined, [], method === "USE")
+        new TobspressChildRouter(fn, undefined, [], options?.catchAll ?? method === "USE")
       );
     } else {
       this.children.set(
