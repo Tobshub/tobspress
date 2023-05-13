@@ -173,7 +173,6 @@ class Tobspress {
     this.staticFolderPath = staticFolder;
   }
 
-  // TODO:
   /** Attach middleware that runs on every request before it's router code if any  */
   attach(middlewares: TobspressRequestHandler[]) {
     this.middlewares.push(...middlewares);
