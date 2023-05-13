@@ -150,7 +150,12 @@ class Tobspress {
     return this;
   }
 
-  private attachRouter(method: Method | "USE", path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined) {
+  private attachRouter(
+    method: Method | "USE",
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ) {
     path = sanitizePath(path);
     if (typeof fn === "function") {
       this.children.set(
