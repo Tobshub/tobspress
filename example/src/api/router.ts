@@ -12,12 +12,15 @@ apiRouter
 
 const deepRouter = new TobspressRouter();
 const deeperRouter = new TobspressRouter();
-const deepestRouter = new TobspressRouter();
-deepestRouter.use("exec", (_, res) => {
-  res.send({message: "this is the deepest router"});
-})
-deeperRouter.use("deepest", {router: deepestRouter})
-deepRouter.use("deeper", {router: deeperRouter});
-apiRouter.use("deep", {router: deepRouter})
+
+deeperRouter.use(
+  "/deepest",
+  (_, res) => {
+    res.send({ alert: "This is the deepest router" });
+  },
+  { catchAll: false }
+);
+deepRouter.use("/deeper", { router: deeperRouter });
+apiRouter.use("/deep", { router: deepRouter });
 
 export default apiRouter;
