@@ -13,8 +13,14 @@ import {
 import { Method, TobspressRequest, TobspressResponse } from "./http";
 
 // export types that might me useful in API implementation
-export { Method, TobspressRequest, TobspressResponse, type TobspressRouterFn, TobspressRouter, type TobspressOptions };
-// TODO: generate random id for each request
+export {
+  Method,
+  TobspressRequest,
+  TobspressResponse,
+  type TobspressRouterFn,
+  TobspressRouter,
+  type TobspressOptions,
+};
 /** The Tobspress instance */
 class Tobspress {
   handler?: TobspressRequestHandler;
@@ -62,7 +68,11 @@ class Tobspress {
     if (!url.length) {
       if (router && router.children && router.children.has({ path: "" })) {
         router = router.children.get({ path: "" });
-      } else if (router && router.children && router.children.has({ path: "", method: request.method })) {
+      } else if (
+        router &&
+        router.children &&
+        router.children.has({ path: "", method: request.method })
+      ) {
         router = router.children.get({ path: "", method: request.method });
       }
     } else {
@@ -72,7 +82,11 @@ class Tobspress {
           router = router.children.get({ path: searchPath });
           // reset searchPath
           searchPath = "";
-        } else if (router && router.children && router.children.has({ path: searchPath, method: request.method })) {
+        } else if (
+          router &&
+          router.children &&
+          router.children.has({ path: searchPath, method: request.method })
+        ) {
           router = router.children.get({ path: searchPath, method: request.method });
           // reset searchPath
           searchPath = "";
@@ -101,7 +115,8 @@ class Tobspress {
     } else if (
       router &&
       router.children &&
-      (router.children.has({ path: "" }) || router.children.has({ path: "", method: request.method }))
+      (router.children.has({ path: "" }) ||
+        router.children.has({ path: "", method: request.method }))
     ) {
       // attempt to use child router on path "/" if router found but no handler
       const handler =
@@ -127,7 +142,11 @@ class Tobspress {
   }
 
   /** Attaches a HTTP POST method router */
-  post(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+  post(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): Tobspress {
     this.attachRouter(Method.POST, path, fn, options);
     return this;
   }
@@ -145,7 +164,11 @@ class Tobspress {
   }
 
   /** Attaches a HTTP DELETE method router */
-  delete(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+  delete(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): Tobspress {
     this.attachRouter(Method.DELETE, path, fn, options);
     return this;
   }
