@@ -78,7 +78,11 @@ class Tobspress {
     } else {
       url.forEach((path, i) => {
         searchPath = searchPath.length ? searchPath.concat("/", path) : path;
-        if (router && router.children && router.children.has({ path: searchPath })) {
+        if (
+          router &&
+          router.children &&
+          router.children.has({ path: searchPath })
+        ) {
           router = router.children.get({ path: searchPath });
           // reset searchPath
           searchPath = "";
@@ -87,7 +91,10 @@ class Tobspress {
           router.children &&
           router.children.has({ path: searchPath, method: request.method })
         ) {
-          router = router.children.get({ path: searchPath, method: request.method });
+          router = router.children.get({
+            path: searchPath,
+            method: request.method,
+          });
           // reset searchPath
           searchPath = "";
         } else if (i === url.length - 1 && !router?.catchAll) {
@@ -102,7 +109,13 @@ class Tobspress {
 
     await this.callHandler(router, request, response);
 
-    this.log([request.id], "Done in", (Date.now() - request.time) / 1000, "status:", response.code);
+    this.log(
+      [request.id],
+      "Done in",
+      (Date.now() - request.time) / 1000,
+      "status:",
+      response.code
+    );
   }
 
   private async callHandler(
@@ -128,15 +141,21 @@ class Tobspress {
       }
     }
     // as a last resort, treat the url as a static file path
-    else if (await response.sendFile(path.join(this.staticFolderPath, request.url))) {
+    else if (
+      await response.sendFile(path.join(this.staticFolderPath, request.url))
+    ) {
     } else {
       // return 404 if no handler or file is found
-      response.status(404).send({ error: "NOT FOUND" });
+      response.status(404).send({ error: "NOT FOUND", url: request.url });
     }
   }
 
   /** Attaches a non-method specific router */
-  use(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+  use(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): Tobspress {
     this.attachRouter("USE", path, fn, options);
     return this;
   }
@@ -152,13 +171,21 @@ class Tobspress {
   }
 
   /** Attaches a HTTP GET method router */
-  get(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+  get(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): Tobspress {
     this.attachRouter(Method.GET, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
-  put(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): Tobspress {
+  put(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): Tobspress {
     this.attachRouter(Method.PUT, path, fn, options);
     return this;
   }
@@ -183,12 +210,21 @@ class Tobspress {
     if (typeof fn === "function") {
       this.children.set(
         method === "USE" ? { path } : { path, method },
-        new TobspressChildRouter(fn, undefined, [], options?.catchAll ?? method === "USE")
+        new TobspressChildRouter(
+          fn,
+          undefined,
+          [],
+          options?.catchAll ?? method === "USE"
+        )
       );
     } else {
       this.children.set(
         method === "USE" ? { path } : { path, method },
-        new TobspressChildRouter(fn.handler, fn.router?.children, fn.router?.middlewares)
+        new TobspressChildRouter(
+          fn.handler,
+          fn.router?.children,
+          fn.router?.middlewares
+        )
       );
     }
   }
