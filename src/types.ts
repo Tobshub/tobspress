@@ -31,7 +31,10 @@ export const mimeType: { [key: string]: string } = {
   ".ttf": "application/x-font-ttf",
 };
 
-export type TobspressRequestHandler = (req: TobspressRequest, res: TobspressResponse) => Promise<void> | void;
+export type TobspressRequestHandler = (
+  req: TobspressRequest,
+  res: TobspressResponse
+) => Promise<void> | void;
 
 export type TobspressRouterType = {
   handler?: TobspressRequestHandler;
@@ -46,17 +49,30 @@ export class TobsMap<Key, Value> {
     this.map = new Map();
   }
 
-  get(key: Key) {
-    return this.map.get(JSON.stringify(key));
+  private serialize(item: any) {
+    if (item && typeof item === "object") {
+      const keys = Object.keys(item);
+      let serializedString = "";
+      for (const key of keys) {
+        serializedString += `[${key}=${item[key]}]`;
+      }
+      return serializedString;
+    } else {
+      return item;
+    }
   }
 
-  set(key: Key, value: Value): TobsMap<Key, Value> {
-    this.map.set(JSON.stringify(key), value);
-    return this;
+  get(key: Key) {
+    return this.map.get(this.serialize(key));
+  }
+
+  set(key: Key, value: Value) {
+    this.map.set(this.serialize(key), value);
+    return key;
   }
 
   has(key: Key) {
-    return this.map.has(JSON.stringify(key));
+    return this.map.has(this.serialize(key));
   }
 
   [Symbol.iterator]() {
