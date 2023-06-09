@@ -1,4 +1,4 @@
-import { TobspressRouter } from "../../../dist/index";
+import { TobspressRouter } from "@tobshub/tobspress";
 
 const apiRouter = new TobspressRouter();
 
@@ -10,17 +10,30 @@ apiRouter
     res.send(`you sent: ${JSON.stringify((await req.body) ?? {})}`);
   });
 
-const deepRouter = new TobspressRouter();
 const deeperRouter = new TobspressRouter();
+const deepestRouter = new TobspressRouter();
+
+deepestRouter.use("/run", (_, res) => res.send("ran from the deepest router"));
 
 deeperRouter.use(
-  "/deepest",
-  (_, res) => {
+  "deep/deeper/deepest",
+  { handler: (_, res) => {
     res.send({ alert: "This is the deepest router" });
+  },
+    router: deepestRouter
   },
   { catchAll: false }
 );
-deepRouter.use("/deeper", { router: deeperRouter });
-apiRouter.use("/deep", { router: deepRouter });
+
+deeperRouter.use("/a/random/router", (_, res) => {
+  res.send({message: "This is a random router"});
+});
+
+apiRouter.use("/", {
+  router: deeperRouter,
+  handler: (_, res) => {
+    res.send("hello world");
+  },
+});
 
 export default apiRouter;
