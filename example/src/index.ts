@@ -1,10 +1,10 @@
-import Tobspress from "@tobshub/tobspress";
+import Tobspress from "../../dist/index";
 import apiRouter from "./api/router";
 import bodyLog from "./middleware/bodyLog";
 
 const app = new Tobspress({ log: true });
 
-app.attach([bodyLog]);
+// app.attach([bodyLog]);
 
 app.static("public");
 
