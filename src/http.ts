@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs/promises";
 import { tobspressLog } from "./helpers";
 import { mimeType } from "./types";
+import { gzip } from "zlib";
 
 export const enum Method {
   GET = "GET",
@@ -110,8 +111,11 @@ export class TobspressResponse {
         encoding: "utf8",
       })
       .then((data) => {
-        this.send(data, {
-          type: mimeType[file_extension] ?? "text/plain",
+        gzip(data, async (_, data) => {
+          await this.send(data, {
+            type: mimeType[file_extension] ?? "text/plain",
+            compressed: true,
+          });
         });
         return true;
       })
@@ -123,9 +127,13 @@ export class TobspressResponse {
    * Sends arbritrary data as the HTTP response
    * By default it attempts to JSON serialize the data
    * */
-  async send(data: string | number | object, options?: { type?: string }) {
+  async send(
+    data: string | number | object,
+    options?: { type?: string; compressed?: boolean }
+  ) {
     this.rawResponse.writeHead(this.code, {
       "Content-Type": `${options?.type ?? "application/json"}; encoding=utf8`,
+      "Content-Encoding": options?.compressed ? "gzip" : "utf8",
     });
     this.rawResponse.write(
       options?.type === "application/json" || !options?.type
