@@ -57,13 +57,48 @@ export class TobspressRouter implements TobspressRouterType {
     if (typeof fn === "function") {
       this.children.set(
         method === "USE" ? { path } : { path, method },
-        new TobspressChildRouter(fn, undefined, [], options?.catchAll ?? method === "USE")
+        new TobspressChildRouter(
+          fn,
+          undefined,
+          [],
+          options?.catchAll ?? method === "USE"
+        )
       );
     } else {
-      this.children.set(
-        method === "USE" ? { path } : { path, method },
-        new TobspressChildRouter(fn.handler, fn.router?.children, fn.router?.middlewares)
-      );
+      // move child routers on "/" path to the parent router
+      if (path === "") {
+        if (fn.router && fn.router.children) {
+          for (const key of fn.router.children) {
+            const child = fn.router.children.get(key)!;
+            this.children.set(
+              key,
+              new TobspressChildRouter(
+                child.handler,
+                child.children,
+                child.middlewares,
+                child.catchAll
+              )
+            );
+          }
+        }
+        this.children.set(
+          method === "USE" ? { path } : { path, method },
+          new TobspressChildRouter(
+            fn.handler,
+            undefined,
+            fn.router?.middlewares
+          )
+        );
+      } else {
+        this.children.set(
+          method === "USE" ? { path } : { path, method },
+          new TobspressChildRouter(
+            fn.handler,
+            fn.router?.children,
+            fn.router?.middlewares
+          )
+        );
+      }
     }
   }
 
