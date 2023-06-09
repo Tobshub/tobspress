@@ -62,21 +62,25 @@ export class TobsMap<Key, Value> {
     }
   }
 
-  get(key: Key) {
+  get(key: Key | string) {
     return this.map.get(this.serialize(key));
   }
 
-  set(key: Key, value: Value) {
+  set(key: Key | string, value: Value) {
     this.map.set(this.serialize(key), value);
     return key;
   }
 
-  has(key: Key) {
+  has(key: Key | string) {
     return this.map.has(this.serialize(key));
   }
 
   [Symbol.iterator]() {
-    return this.map.keys;
+    return this.map.keys();
+  }
+
+  keys() {
+    return this.map.keys();
   }
 
   size() {
