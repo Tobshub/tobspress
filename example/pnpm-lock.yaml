@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@tobshub/tobspress':
-    specifier: ^2.4.0
-    version: 2.4.0
+    specifier: ^2.5.0
+    version: 2.5.0
 
 devDependencies:
   '@types/node':
@@ -45,8 +45,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@tobshub/tobspress@2.4.0:
-    resolution: {integrity: sha512-UffXJszTBECfbb1YALh7A4n5JR6bs0MXxPxhkeihUhbLHxkvgJ2oN5D8Rs/zFR8PWKaIkomM3CzgZCT/NZjQKg==}
+  /@tobshub/tobspress@2.5.0:
+    resolution: {integrity: sha512-k6feQeJ/K0M927FCrPYvaawKJi856s98RzBlBurDRnPS/Zs3RhA5iIq5GuTtVQA5Ls9Nshnm+RfRfG/vmNghww==}
     engines: {node: '>=16', npm: '>=8'}
     dev: false
 
