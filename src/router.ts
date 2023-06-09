@@ -18,31 +18,51 @@ export class TobspressRouter implements TobspressRouterType {
   }
 
   /** Attaches a non-method specific router */
-  use(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): TobspressRouter {
+  use(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): TobspressRouter {
     this.attachRouter("USE", path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP POST method router */
-  post(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): TobspressRouter {
+  post(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): TobspressRouter {
     this.attachRouter(Method.POST, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP GET method router */
-  get(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): TobspressRouter {
+  get(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): TobspressRouter {
     this.attachRouter(Method.GET, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
-  put(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): TobspressRouter {
+  put(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): TobspressRouter {
     this.attachRouter(Method.PUT, path, fn, options);
     return this;
   }
 
   /** Attaches a HTTP DELETE method router */
-  delete(path: string, fn: TobspressRouterFn, options?: TobspressRouteOptions | undefined): TobspressRouter {
+  delete(
+    path: string,
+    fn: TobspressRouterFn,
+    options?: TobspressRouteOptions | undefined
+  ): TobspressRouter {
     this.attachRouter(Method.DELETE, path, fn, options);
     return this;
   }
@@ -111,7 +131,10 @@ export class TobspressRouter implements TobspressRouterType {
 export class TobspressChildRouter implements TobspressRouterType {
   constructor(
     public readonly handler?: TobspressRequestHandler,
-    public readonly children?: TobsMap<{ path: string; method?: Method }, TobspressRouterType>,
+    public readonly children?: TobsMap<
+      { path: string; method?: Method },
+      TobspressRouterType
+    >,
     public readonly middlewares: TobspressRequestHandler[] = [],
     /** Whether the router should catch child paths that are not defined */
     public readonly catchAll?: boolean
