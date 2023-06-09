@@ -111,6 +111,7 @@ export class TobspressResponse {
         encoding: "utf8",
       })
       .then((data) => {
+        // use gzip compression on read file data
         gzip(data, async (_, data) => {
           await this.send(data, {
             type: mimeType[file_extension] ?? "text/plain",
