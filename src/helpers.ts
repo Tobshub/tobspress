@@ -8,6 +8,6 @@ export function sanitizePath(path: string) {
 }
 
 /** Log with Tobspress tag and timestamp */
-export const tobspressLog = (...args: any) => {
+export function tobspressLog(...args: any) {
   console.log("[Tobspress]", new Date(), ...args);
-};
+}
