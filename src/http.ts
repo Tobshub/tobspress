@@ -44,7 +44,7 @@ export class TobspressRequest {
     this.url = this.rawRequest.url ?? "/";
   }
 
-  async parseBody() {
+  private async parseBody() {
     let raw_body = "";
     // parse chunk emitted from data event as request body
     if (this.method !== Method.GET) {
