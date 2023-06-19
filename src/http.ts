@@ -132,14 +132,16 @@ export class TobspressResponse {
     data: string | number | object,
     options?: { type?: string; compressed?: boolean }
   ) {
+    const type =
+      options?.type ?? typeof data === "string"
+        ? "text/plain"
+        : "application/json";
     this.rawResponse.writeHead(this.code, {
-      "Content-Type": `${options?.type ?? "application/json"}; encoding=utf8`,
+      "Content-Type": `${type}; encoding=utf8`,
       "Content-Encoding": options?.compressed ? "gzip" : "utf8",
     });
     this.rawResponse.write(
-      options?.type === "application/json" || !options?.type
-        ? JSON.stringify(data)
-        : data
+      type === "application/json" ? JSON.stringify(data) : data
     );
     this.rawResponse.end();
   }
