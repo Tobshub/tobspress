@@ -11,7 +11,8 @@
     "dev": "rollup -c --watch",
     "build": "rollup -c",
     "npm-pub": "pnpm build && npm publish",
-    "example": "cd ./example && pnpm start"
+    "example": "cd ./example && pnpm start",
+    "test": "node ./tests/test.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
