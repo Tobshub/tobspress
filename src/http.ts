@@ -72,8 +72,10 @@ export class TobspressResponse {
    * By default it is 200
    * */
   code: number;
+  options: { compressed: boolean; type: string };
   constructor(readonly rawResponse: ServerResponse) {
     this.code = 200;
+    this.options = { compressed: false, type: "text/plain" };
   }
 
   /**
@@ -113,10 +115,11 @@ export class TobspressResponse {
       .then((data) => {
         // use gzip compression on read file data
         gzip(data, async (_, data) => {
-          await this.send(data, {
-            type: mimeType[file_extension] ?? "text/plain",
+          this.options = {
             compressed: true,
-          });
+            type: mimeType[file_extension] ?? "text/plain",
+          };
+          await this._send(data);
         });
         return true;
       })
@@ -128,21 +131,31 @@ export class TobspressResponse {
    * Sends arbritrary data as the HTTP response
    * By default it attempts to JSON serialize the data
    * */
-  async send(
-    data: string | number | object | Buffer,
-    options?: { type?: string; compressed?: boolean }
-  ) {
-    const type = options?.type
-      ? options.type
-      : typeof data === "string"
-      ? "text/plain"
-      : "application/json";
+  async send(data: string | number | object | Buffer) {
+    switch (typeof data) {
+      case "object": {
+        if (Buffer.isBuffer(data)) {
+          this.options.type = "application/octet-stream";
+        } else {
+          this.options.type = "application/json";
+        }
+        break;
+      }
+      default: {
+        this.options.type = "text/plain";
+        break;
+      }
+    }
+    await this._send(data);
+  }
+
+  private async _send(data: any) {
     this.rawResponse.writeHead(this.code, {
-      "Content-Type": `${type}; charset=utf8`,
-      "Content-Encoding": options?.compressed ? "gzip" : "utf8",
+      "Content-Type": `${this.options.type}; charset=utf8`,
+      "Content-Encoding": this.options.compressed ? "gzip" : "utf8",
     });
     this.rawResponse.write(
-      type === "application/json" && !options?.compressed
+      this.options.type === "application/json" && !this.options.compressed
         ? JSON.stringify(data)
         : data
     );
