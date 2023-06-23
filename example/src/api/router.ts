@@ -17,16 +17,17 @@ deepestRouter.use("/run", (_, res) => res.send("ran from the deepest router"));
 
 deeperRouter.use(
   "deep/deeper/deepest",
-  { handler: (_, res) => {
-    res.send({ alert: "This is the deepest router" });
-  },
-    router: deepestRouter
+  {
+    handler: (_, res) => {
+      res.send({ alert: "This is the deepest router" });
+    },
+    router: deepestRouter,
   },
   { catchAll: false }
 );
 
 deeperRouter.use("/a/random/router", (_, res) => {
-  res.send({message: "This is a random router"});
+  res.send({ message: "This is a random router" });
 });
 
 apiRouter.use("/", {
