@@ -73,4 +73,12 @@ test("API Testing", async (t) => {
     const message = await res.text();
     assert.strictEqual("I am here", message);
   });
+
+  await t.test("/package.json", async () => {
+    const res = await fetch(API_URL + "/package.json");
+    const text = await res.text();
+    console.log(text, res.headers.get("content-type"));
+
+    assert.strictEqual(res.status, 200);
+  });
 });
