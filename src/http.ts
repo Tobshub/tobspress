@@ -129,19 +129,22 @@ export class TobspressResponse {
    * By default it attempts to JSON serialize the data
    * */
   async send(
-    data: string | number | object,
+    data: string | number | object | Buffer,
     options?: { type?: string; compressed?: boolean }
   ) {
-    const type =
-      options?.type ?? typeof data === "string"
-        ? "text/plain"
-        : "application/json";
+    const type = options?.type
+      ? options.type
+      : typeof data === "string"
+      ? "text/plain"
+      : "application/json";
     this.rawResponse.writeHead(this.code, {
-      "Content-Type": `${type}; encoding=utf8`,
+      "Content-Type": `${type}; charset=utf8`,
       "Content-Encoding": options?.compressed ? "gzip" : "utf8",
     });
     this.rawResponse.write(
-      type === "application/json" ? JSON.stringify(data) : data
+      type === "application/json" && !options?.compressed
+        ? JSON.stringify(data)
+        : data
     );
     this.rawResponse.end();
   }
