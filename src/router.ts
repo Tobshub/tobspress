@@ -17,108 +17,197 @@ export class TobspressRouter implements TobspressRouterType {
     this.middlewares = [];
   }
 
+  /** Attaches a non-method specific router that catches all request paths under the given path */
+  all(
+    path: string,
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+  ): TobspressRouter {
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        "USE",
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType,
+        { catchAll: true }
+      );
+    } else {
+      this.attachRouter(
+        "USE",
+        path,
+        fn as TobspressRequestHandler[],
+        undefined,
+        { catchAll: true }
+      );
+    }
+    return this;
+  }
+
   /** Attaches a non-method specific router */
   use(
     path: string,
-    fn: TobspressRouterFn,
-    options?: TobspressRouteOptions | undefined
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
   ): TobspressRouter {
-    this.attachRouter("USE", path, fn, options);
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        "USE",
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType
+      );
+    } else {
+      this.attachRouter(
+        "USE",
+        path,
+        fn as TobspressRequestHandler[],
+        undefined
+      );
+    }
     return this;
   }
 
   /** Attaches a HTTP POST method router */
   post(
     path: string,
-    fn: TobspressRouterFn,
-    options?: TobspressRouteOptions | undefined
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
   ): TobspressRouter {
-    this.attachRouter(Method.POST, path, fn, options);
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        Method.POST,
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType
+      );
+    } else {
+      this.attachRouter(
+        Method.POST,
+        path,
+        fn as TobspressRequestHandler[],
+        undefined
+      );
+    }
     return this;
   }
 
   /** Attaches a HTTP GET method router */
   get(
     path: string,
-    fn: TobspressRouterFn,
-    options?: TobspressRouteOptions | undefined
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
   ): TobspressRouter {
-    this.attachRouter(Method.GET, path, fn, options);
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        Method.GET,
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType
+      );
+    } else {
+      this.attachRouter(
+        Method.GET,
+        path,
+        fn as TobspressRequestHandler[],
+        undefined
+      );
+    }
     return this;
   }
 
   /** Attaches a HTTP PUT method router */
   put(
     path: string,
-    fn: TobspressRouterFn,
-    options?: TobspressRouteOptions | undefined
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
   ): TobspressRouter {
-    this.attachRouter(Method.PUT, path, fn, options);
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        Method.PUT,
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType
+      );
+    } else {
+      this.attachRouter(
+        Method.PUT,
+        path,
+        fn as TobspressRequestHandler[],
+        undefined
+      );
+    }
     return this;
   }
 
   /** Attaches a HTTP DELETE method router */
   delete(
     path: string,
-    fn: TobspressRouterFn,
-    options?: TobspressRouteOptions | undefined
+    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
   ): TobspressRouter {
-    this.attachRouter(Method.DELETE, path, fn, options);
+    if (fn.at(-1) instanceof TobspressRouter) {
+      const router = fn.pop();
+      this.attachRouter(
+        Method.DELETE,
+        path,
+        fn as TobspressRequestHandler[],
+        router as TobspressRouterType
+      );
+    } else {
+      this.attachRouter(
+        Method.DELETE,
+        path,
+        fn as TobspressRequestHandler[],
+        undefined
+      );
+    }
     return this;
   }
 
   private attachRouter(
     method: Method | "USE",
     path: string,
-    fn: TobspressRouterFn,
+    handlers: TobspressRequestHandler[],
+    router: TobspressRouterType | undefined,
     options?: TobspressRouteOptions | undefined
   ) {
     path = sanitizePath(path);
-    if (typeof fn === "function") {
+    if (router) {
+      // move child routers on "/" path to the parent router
+      if (path === "" && router.children) {
+        for (const key of router.children) {
+          const child = router.children.get(key)!;
+          this.children.set(
+            key,
+            new TobspressChildRouter(
+              child.handler,
+              child.children,
+              child.middlewares,
+              child.catchAll
+            )
+          );
+        }
+      }
+      router.middlewares.push(...handlers);
       this.children.set(
         method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(
-          fn,
-          undefined,
-          [],
-          options?.catchAll ?? method === "USE"
+          router.handler,
+          path === "" ? undefined : router.children,
+          router.middlewares,
+          options?.catchAll
         )
       );
-    } else {
-      // move child routers on "/" path to the parent router
-      if (path === "") {
-        if (fn.router && fn.router.children) {
-          for (const key of fn.router.children) {
-            const child = fn.router.children.get(key)!;
-            this.children.set(
-              key,
-              new TobspressChildRouter(
-                child.handler,
-                child.children,
-                child.middlewares,
-                child.catchAll
-              )
-            );
-          }
-        }
-        this.children.set(
-          method === "USE" ? { path } : { path, method },
-          new TobspressChildRouter(
-            fn.handler,
-            undefined,
-            fn.router?.middlewares
-          )
-        );
-      } else {
-        this.children.set(
-          method === "USE" ? { path } : { path, method },
-          new TobspressChildRouter(
-            fn.handler,
-            fn.router?.children,
-            fn.router?.middlewares
-          )
-        );
-      }
+    } else if (handlers && handlers.length) {
+      const lastHandler = handlers.pop();
+      this.children.set(
+        method === "USE" ? { path } : { path, method },
+        new TobspressChildRouter(
+          lastHandler,
+          undefined,
+          handlers,
+          options?.catchAll
+        )
+      );
     }
   }
 
