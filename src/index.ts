@@ -6,7 +6,6 @@ import {
   type TobspressRouterType,
   type TobspressRequestHandler,
   TobsMap,
-  type TobspressRouterFn,
   type TobspressOptions,
   TobspressRouteOptions,
 } from "./types";
@@ -17,7 +16,6 @@ export {
   Method,
   TobspressRequest,
   TobspressResponse,
-  type TobspressRouterFn,
   TobspressRouter,
   type TobspressOptions,
 };
@@ -62,18 +60,20 @@ class Tobspress {
     const url = splitPath(request.url.substring(1));
 
     let router: TobspressRouterType | undefined = this;
-    const routeMiddlewares = this.middlewares;
+    const routeMiddlewares = [...this.middlewares];
     let searchPath = "";
 
     if (!url.length) {
       if (router && router.children && router.children.has({ path: "" })) {
         router = router.children.get({ path: "" });
+        if (router) routeMiddlewares.push(...router.middlewares);
       } else if (
         router &&
         router.children &&
         router.children.has({ path: "", method: request.method })
       ) {
         router = router.children.get({ path: "", method: request.method });
+        if (router) routeMiddlewares.push(...router.middlewares);
       }
     } else {
       url.forEach((path, i) => {
@@ -104,10 +104,7 @@ class Tobspress {
       });
     }
 
-    // call middlewares
-    routeMiddlewares.forEach((fn) => fn(request, response));
-
-    await this.callHandler(router, request, response);
+    await this.callHandler(router, request, response, routeMiddlewares);
 
     this.log(
       [request.id],
@@ -121,9 +118,12 @@ class Tobspress {
   private async callHandler(
     router: TobspressRouterType | undefined,
     request: TobspressRequest,
-    response: TobspressResponse
+    response: TobspressResponse,
+    routeMiddlewares: TobspressRequestHandler[]
   ) {
     if (router && router.handler) {
+      // router middlewares have already been added
+      routeMiddlewares.forEach((fn) => fn(request, response));
       await router.handler(request, response);
     } else if (
       router &&
@@ -132,12 +132,16 @@ class Tobspress {
         router.children.has({ path: "", method: request.method }))
     ) {
       // attempt to use child router on path "/" if router found but no handler
-      const handler =
-        router.children.get({ path: "" })?.handler ??
-        router.children.get({ path: "", method: request.method })?.handler;
-      if (handler) {
-        await handler(request, response);
-        return;
+      router =
+        router.children.get({ path: "" }) ??
+        router.children.get({ path: "", method: request.method });
+      if (router) {
+        this.callHandler(
+          router,
+          request,
+          response,
+          routeMiddlewares.concat(router.middlewares)
+        );
       }
     }
     // as a last resort, treat the url as a static file path
@@ -305,13 +309,12 @@ class Tobspress {
   ) {
     path = sanitizePath(path);
     if (router) {
-      router.middlewares.push(...handlers);
       this.children.set(
         method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(
           router.handler,
           router.children,
-          router.middlewares,
+          router.middlewares.concat(handlers),
           options?.catchAll
         )
       );

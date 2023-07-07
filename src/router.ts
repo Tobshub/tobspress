@@ -3,7 +3,6 @@ import {
   type TobspressRouterType,
   type TobspressRequestHandler,
   TobsMap,
-  type TobspressRouterFn,
   TobspressRouteOptions,
 } from "./types";
 import { Method } from "./http";
@@ -176,24 +175,16 @@ export class TobspressRouter implements TobspressRouterType {
       if (path === "" && router.children) {
         for (const key of router.children) {
           const child = router.children.get(key)!;
-          this.children.set(
-            key,
-            new TobspressChildRouter(
-              child.handler,
-              child.children,
-              child.middlewares,
-              child.catchAll
-            )
-          );
+          child.middlewares.push(...router.middlewares, ...handlers);
+          this.children.set(key, child);
         }
       }
-      router.middlewares.push(...handlers);
       this.children.set(
         method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(
           router.handler,
           path === "" ? undefined : router.children,
-          router.middlewares,
+          router.middlewares.concat(handlers),
           options?.catchAll
         )
       );
