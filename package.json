@@ -7,7 +7,6 @@
   "author": "Tobshub",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node test/app.ts",
     "dev": "rollup -c --watch",
     "build": "rollup -c",
     "npm-pub": "pnpm build && npm publish",
