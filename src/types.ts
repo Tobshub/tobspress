@@ -88,6 +88,6 @@ export class TobsMap<Key, Value> {
   }
 }
 
-export type TobspressRouterFn =
-  | TobspressRequestHandler
-  | { handler?: TobspressRequestHandler; router?: TobspressRouterType };
+// export type TobspressRouterFn =
+//   | TobspressRequestHandler
+//   | { handler?: TobspressRequestHandler; router?: TobspressRouterType };
