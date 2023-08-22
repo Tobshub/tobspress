@@ -31,9 +31,12 @@ export const mimeType: { [key: string]: string } = {
   ".ttf": "application/x-font-ttf",
 };
 
+export type TobspressNextFn = () => void;
+
 export type TobspressRequestHandler = (
   req: TobspressRequest,
-  res: TobspressResponse
+  res: TobspressResponse,
+  next: TobspressNextFn
 ) => Promise<void> | void;
 
 export type TobspressRouterType = {

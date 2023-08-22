@@ -21,7 +21,6 @@ export {
 };
 /** The Tobspress instance */
 class Tobspress {
-  handler?: TobspressRequestHandler;
   children: TobsMap<{ path: string; method?: Method }, TobspressRouterType>;
   /** The path to the folder to look for static files in */
   private staticFolderPath: string;
@@ -123,8 +122,19 @@ class Tobspress {
   ) {
     if (router && router.handler) {
       // router middlewares have already been added
-      routeMiddlewares.forEach((fn) => fn(request, response));
-      await router.handler(request, response);
+      let continueCall = true;
+      const next = () => {
+        continueCall = true;
+      };
+      routeMiddlewares.forEach((fn) => {
+        if (continueCall) {
+          continueCall = false;
+          fn(request, response, next);
+        }
+      });
+      if (continueCall) {
+        await router.handler(request, response, next);
+      }
     } else if (
       router &&
       router.children &&
