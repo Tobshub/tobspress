@@ -54,7 +54,6 @@ class Tobspress {
     // transform `req` & `res` to their Tobspress counterparts
     const request = new TobspressRequest(req);
     const response = new TobspressResponse(res);
-    this.log([request.id], request.method, request.url);
     // search for the req path in `this.routers`
     const url = splitPath(request.url.substring(1));
 
@@ -105,13 +104,16 @@ class Tobspress {
 
     await this.callHandler(router, request, response, routeMiddlewares);
 
-    this.log(
-      [request.id],
-      "Done in",
-      (Date.now() - request.time) / 1000,
-      "status:",
-      response.code
-    );
+    if (this.options?.log) {
+      request.log(
+        request.method,
+        request.url,
+        "| done in:",
+        (Date.now() - request.time) / 1000,
+        "| status:",
+        response.code
+      );
+    }
   }
 
   private async callHandler(

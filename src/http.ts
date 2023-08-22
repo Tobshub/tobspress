@@ -4,7 +4,6 @@ import fs from "fs/promises";
 import { tobspressLog } from "./helpers";
 import { mimeType } from "./types";
 import { gzip } from "zlib";
-import { OutgoingHttpHeaders } from "http2";
 
 export const enum Method {
   GET = "GET",
@@ -22,7 +21,7 @@ export class TobspressRequest {
   headers: IncomingHttpHeaders;
   method: Method;
   url: string;
-  id: number;
+  private id: number;
   time: number;
   query: Record<string, string>;
   constructor(readonly rawRequest: IncomingMessage) {
@@ -95,6 +94,10 @@ Either there is a syntax error or support for that content type is not yet imple
       }
     }
     return url;
+  }
+
+  log(...args: any[]) {
+    tobspressLog([this.id], ...args);
   }
 }
 
