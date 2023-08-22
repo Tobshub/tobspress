@@ -12,7 +12,10 @@ app.use("health", (_, res) => {
 const apiRouter = new TobspressRouter();
 apiRouter.get(
   "/",
-  (_, res) => res.setHeader("middleware-active", "true"),
+  (_, res, next) => {
+    res.setHeader("middleware-active", "true");
+    next();
+  },
   (_, res) => res.send("API ROUTE")
 );
 apiRouter.post("/", async (req, res) => res.send(await req.body));
@@ -25,7 +28,10 @@ deeperApiRouter.all("/", (_, res) => res.send("DEEP"));
 
 apiRouter.all(
   "/all",
-  (_, res) => res.setHeader("middleware-active", "true"),
+  (_, res, next) => {
+    res.setHeader("middleware-active", "true");
+    next();
+  },
   deeperApiRouter
 );
 
