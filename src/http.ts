@@ -57,11 +57,30 @@ export class TobspressRequest {
 
     // parse the raw body into an object
     let body: any = undefined;
-    try {
-      body = raw_body ? JSON.parse(raw_body) : null;
-    } catch (error) {
-      // not json
-      tobspressLog([this.id], "Error: Could not parse request body", error);
+    if (raw_body) {
+      try {
+        switch (this.headers["content-type"]) {
+          case "application/x-www-form-urlencoded":
+            body = {};
+            const data = new URLSearchParams(raw_body);
+            for (const [key, value] of data.entries()) {
+              body[key] = value;
+            }
+            break;
+          case "application/json":
+          default:
+            body = JSON.parse(raw_body);
+            break;
+        }
+      } catch (error) {
+        tobspressLog(
+          [this.id],
+          `\
+Error: Could not parse request body.
+Either there is a syntax error or support for that content type is not yet implemented.`,
+          error
+        );
+      }
     }
     return body;
   }
@@ -85,7 +104,9 @@ export class TobspressResponse {
    * By default it is 200
    * */
   code: number;
-  options: { compressed: boolean; type: string };
+  private options: { compressed: boolean; type: string };
+  // TODO: headers
+  // headers:
   constructor(readonly rawResponse: ServerResponse) {
     this.code = 200;
     this.options = { compressed: false, type: "text/plain" };
