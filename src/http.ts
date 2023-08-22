@@ -23,9 +23,10 @@ export class TobspressRequest {
   url: string;
   id: number;
   time: number;
+  query: Record<string, string>;
   constructor(readonly rawRequest: IncomingMessage) {
     this.body = this.parseBody();
-    this.headers = this.rawRequest.headers;
+    this.headers = rawRequest.headers;
     this.id = parseInt((Math.random() * 100000).toFixed(0));
     this.time = Date.now();
     /**
@@ -41,7 +42,8 @@ export class TobspressRequest {
         : rawRequest.method === "DELETE"
         ? Method.DELETE
         : Method.POST;
-    this.url = this.rawRequest.url ?? "/";
+    this.query = {};
+    this.url = rawRequest.url ? this.parseUrl(rawRequest.url) : "/";
   }
 
   private async parseBody() {
@@ -62,6 +64,17 @@ export class TobspressRequest {
       tobspressLog([this.id], "Error: Could not parse request body", error);
     }
     return body;
+  }
+
+  private parseUrl(_url: string): string {
+    const [url, queryString] = _url.split("?");
+    if (queryString) {
+      const query = new URLSearchParams(queryString);
+      for (const [key, value] of query.entries()) {
+        this.query[key] = value;
+      }
+    }
+    return url;
   }
 }
 
