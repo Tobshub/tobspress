@@ -20,6 +20,10 @@ apiRouter.get(
 );
 apiRouter.post("/", async (req, res) => res.send(await req.body));
 
+apiRouter.post("/form-urlencoded", async (req, res) =>
+  res.send(await req.body)
+);
+
 apiRouter.get("/query", async (req, res) => res.send(req.query));
 
 const deeperApiRouter = new TobspressRouter();
@@ -86,6 +90,17 @@ test("API Testing", async (t) => {
     assert.deepStrictEqual(reqBody, resBody);
   });
 
+  await t.test("POST with form-urlencoded body", async () => {
+    const reqBody = { hello: "WORLD", time: Date.now().toString() };
+    const res = await fetch(API_URL + "/api/form-urlencoded", {
+      method: "POST",
+      body: new URLSearchParams(reqBody).toString(),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+    const resBody = await res.json();
+    assert.deepStrictEqual(reqBody, resBody);
+  });
+
   await t.test("ALL /api/all", async () => {
     const res = await fetch(API_URL + "/api/all");
     const text = await res.text();
@@ -115,7 +130,7 @@ test("API Testing", async (t) => {
   });
 
   await t.test("URL Query", async () => {
-    const searchParams = { hello: "world", time: Date.now().toString() };
+    const searchParams = { hello: "WORLD", time: Date.now().toString() };
     const res = await fetch(
       API_URL + "/api/query?" + new URLSearchParams(searchParams).toString()
     );
