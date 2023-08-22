@@ -44,6 +44,8 @@ export class TobspressRequest {
         : Method.POST;
     this.query = {};
     this.url = rawRequest.url ? this.parseUrl(rawRequest.url) : "/";
+
+    this.log = this.log.bind(this);
   }
 
   private async parseBody() {
@@ -113,6 +115,13 @@ export class TobspressResponse {
   constructor(readonly rawResponse: ServerResponse) {
     this.code = 200;
     this.options = { compressed: false, type: "text/plain" };
+
+    this.status = this.status.bind(this);
+    this.setHeader = this.setHeader.bind(this);
+    this.removeHeader = this.removeHeader.bind(this);
+    this.getHeader = this.getHeader.bind(this);
+    this.sendFile = this.sendFile.bind(this);
+    this.send = this.send.bind(this);
   }
 
   /**

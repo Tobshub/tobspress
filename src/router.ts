@@ -14,6 +14,14 @@ export class TobspressRouter implements TobspressRouterType {
   constructor() {
     this.children = new TobsMap();
     this.middlewares = [];
+
+    this.all = this.all.bind(this);
+    this.use = this.use.bind(this);
+    this.get = this.get.bind(this);
+    this.post = this.post.bind(this);
+    this.put = this.put.bind(this);
+    this.delete = this.delete.bind(this);
+    this.attach = this.attach.bind(this);
   }
 
   /** Attaches a non-method specific router that catches all request paths under the given path */

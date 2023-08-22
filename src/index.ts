@@ -27,9 +27,16 @@ class Tobspress {
   middlewares: TobspressRequestHandler[];
   constructor(private readonly options?: TobspressOptions) {
     this.children = new TobsMap();
-    this.handleRequest = this.handleRequest.bind(this);
     this.staticFolderPath = process.cwd();
     this.middlewares = [];
+
+    this.listen = this.listen.bind(this);
+    this.all = this.all.bind(this);
+    this.use = this.use.bind(this);
+    this.post = this.post.bind(this);
+    this.get = this.get.bind(this);
+    this.delete = this.delete.bind(this);
+    this.put = this.put.bind(this);
   }
 
   /** Listens on `port` for http requests */
