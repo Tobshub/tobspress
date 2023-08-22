@@ -122,6 +122,7 @@ export class TobspressResponse {
     this.getHeader = this.getHeader.bind(this);
     this.sendFile = this.sendFile.bind(this);
     this.send = this.send.bind(this);
+    this.end = this.end.bind(this);
   }
 
   /**
@@ -218,6 +219,10 @@ export class TobspressResponse {
         ? JSON.stringify(data)
         : data
     );
+    this.rawResponse.end();
+  }
+
+  end(cb?: () => void) {
     this.rawResponse.end();
   }
 }
