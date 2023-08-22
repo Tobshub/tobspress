@@ -17,6 +17,8 @@ apiRouter.get(
 );
 apiRouter.post("/", async (req, res) => res.send(await req.body));
 
+apiRouter.get("/query", async (req, res) => res.send(req.query));
+
 const deeperApiRouter = new TobspressRouter();
 
 deeperApiRouter.all("/", (_, res) => res.send("DEEP"));
@@ -84,7 +86,7 @@ test("API Testing", async (t) => {
     const middlewareActive = res.headers.get("middleware-active");
 
     assert.strictEqual(middlewareActive, "true");
-    assert.deepStrictEqual(text, "DEEP");
+    assert.strictEqual(text, "DEEP");
   });
 
   await t.test("/echo/hello/world", async () => {
@@ -104,5 +106,15 @@ test("API Testing", async (t) => {
     const text = await res.text();
 
     assert.strictEqual(res.status, 200);
+  });
+
+  await t.test("URL Query", async () => {
+    const searchParams = { hello: "world", time: Date.now().toString() };
+    const res = await fetch(
+      API_URL + "/api/query?" + new URLSearchParams(searchParams).toString()
+    );
+    const resBody = await res.json();
+
+    assert.deepStrictEqual(searchParams, resBody);
   });
 });
