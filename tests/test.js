@@ -12,7 +12,7 @@ app.use("health", (_, res) => {
 const apiRouter = new TobspressRouter();
 apiRouter.get(
   "/",
-  () => console.log("GET ON '/' ON '/api'"),
+  (_, res) => res.setHeader("middleware-active", "true"),
   (_, res) => res.send("API ROUTE")
 );
 apiRouter.post("/", async (req, res) => res.send(await req.body));
@@ -21,7 +21,11 @@ const deeperApiRouter = new TobspressRouter();
 
 deeperApiRouter.all("/", (_, res) => res.send("DEEP"));
 
-apiRouter.all("/all", () => console.log("DANGEROUS"), deeperApiRouter);
+apiRouter.all(
+  "/all",
+  (_, res) => res.setHeader("middleware-active", "true"),
+  deeperApiRouter
+);
 
 app.use("/api", apiRouter);
 
@@ -58,6 +62,9 @@ test("API Testing", async (t) => {
   await t.test("GET /api but with child router on '/'", async () => {
     const res = await fetch(API_URL + "/api");
     const text = await res.text();
+    const middlewareActive = res.headers.get("middleware-active");
+
+    assert.strictEqual(middlewareActive, "true");
     assert.strictEqual("API ROUTE", text);
   });
 
@@ -74,6 +81,9 @@ test("API Testing", async (t) => {
   await t.test("ALL /api/all", async () => {
     const res = await fetch(API_URL + "/api/all");
     const text = await res.text();
+    const middlewareActive = res.headers.get("middleware-active");
+
+    assert.strictEqual(middlewareActive, "true");
     assert.deepStrictEqual(text, "DEEP");
   });
 
@@ -92,7 +102,6 @@ test("API Testing", async (t) => {
   await t.test("/package.json", async () => {
     const res = await fetch(API_URL + "/package.json");
     const text = await res.text();
-    // console.log(text, res.headers.get("content-type"));
 
     assert.strictEqual(res.status, 200);
   });
