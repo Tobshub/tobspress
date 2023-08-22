@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import { tobspressLog } from "./helpers";
 import { mimeType } from "./types";
 import { gzip } from "zlib";
+import { OutgoingHttpHeaders } from "http2";
 
 export const enum Method {
   GET = "GET",
@@ -105,8 +106,7 @@ export class TobspressResponse {
    * */
   code: number;
   private options: { compressed: boolean; type: string };
-  // TODO: headers
-  // headers:
+
   constructor(readonly rawResponse: ServerResponse) {
     this.code = 200;
     this.options = { compressed: false, type: "text/plain" };
@@ -131,6 +131,10 @@ export class TobspressResponse {
   removeHeader(name: string): TobspressResponse {
     this.rawResponse.removeHeader(name);
     return this;
+  }
+
+  getHeader(name: string) {
+    return this.rawResponse.getHeader(name.toLowerCase());
   }
 
   /**
@@ -184,10 +188,19 @@ export class TobspressResponse {
   }
 
   private async _send(data: any) {
-    this.rawResponse.writeHead(this.code, {
-      "Content-Type": `${this.options.type}; charset=utf8`,
-      "Content-Encoding": this.options.compressed ? "gzip" : "utf8",
-    });
+    // prioritize user set headers over automatic headers
+    this.setHeader(
+      "Content-Type",
+      this.getHeader("Content-Type") ?? this.options.type
+    );
+    this.setHeader(
+      "Content-Encoding",
+      this.options.compressed
+        ? "gzip"
+        : this.getHeader("Content-Encoding") ?? "utf8"
+    );
+    const headers = this.rawResponse.getHeaders();
+    this.rawResponse.writeHead(this.code, headers);
     this.rawResponse.write(
       this.options.type === "application/json" && !this.options.compressed
         ? JSON.stringify(data)
