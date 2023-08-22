@@ -54,7 +54,7 @@ class Tobspress {
 
   private init(): Server {
     this.log("Starting App...");
-    return createServer(this.handleRequest);
+    return createServer((req, res) => this.handleRequest(req, res));
   }
 
   private async handleRequest(req: IncomingMessage, res: ServerResponse) {
