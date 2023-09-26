@@ -29,7 +29,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -58,7 +58,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -85,7 +85,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -112,7 +112,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -139,7 +139,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -166,7 +166,7 @@ export class TobspressRouter implements TobspressRouterType {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): TobspressRouter {
     if (fn.at(-1) instanceof TobspressRouter) {

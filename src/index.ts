@@ -178,7 +178,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -207,7 +207,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -234,7 +234,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -261,7 +261,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -288,7 +288,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
@@ -315,7 +315,7 @@ class Tobspress {
     path: string,
     ...fn: [
       ...TobspressRequestHandler[],
-      TobspressRouterType | undefined | void
+      TobspressRequestHandler | TobspressRouterType | undefined | void
     ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
