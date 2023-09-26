@@ -176,7 +176,10 @@ class Tobspress {
   /** Attaches a non-method specific router that catches all request paths under the given path */
   all(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -202,7 +205,10 @@ class Tobspress {
   /** Attaches a non-method specific router */
   use(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -226,7 +232,10 @@ class Tobspress {
   /** Attaches a HTTP POST method router */
   post(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -250,7 +259,10 @@ class Tobspress {
   /** Attaches a HTTP GET method router */
   get(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -274,7 +286,10 @@ class Tobspress {
   /** Attaches a HTTP PUT method router */
   put(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -298,7 +313,10 @@ class Tobspress {
   /** Attaches a HTTP DELETE method router */
   delete(
     path: string,
-    ...fn: [...TobspressRequestHandler[], TobspressRouterType]
+    ...fn: [
+      ...TobspressRequestHandler[],
+      TobspressRouterType | undefined | void
+    ]
   ): Tobspress {
     if (fn.at(-1) instanceof TobspressRouter) {
       const router = fn.pop();
@@ -338,7 +356,10 @@ class Tobspress {
         )
       );
     } else if (handlers && handlers.length) {
-      const lastHandler = handlers.pop();
+      let lastHandler: TobspressRequestHandler | undefined = undefined;
+      do {
+        lastHandler = handlers.pop();
+      } while (!lastHandler && handlers.length > 0);
       this.children.set(
         method === "USE" ? { path } : { path, method },
         new TobspressChildRouter(

@@ -39,22 +39,26 @@ apiRouter.all(
 
 app.use("/api", apiRouter);
 
-app.all("/echo", (req, res) => {
-  const url = req.url.split("/").filter((path) => path !== "");
-  // remove echo from the text
-  url.shift();
-  if (url.length) {
-    const message = url.join(" ").replace(/(%20)|\+/g, " ");
-    if (message.toLowerCase() === "hello world") {
-      res.send("Come on! That's too easy.");
+app.all(
+  "/echo",
+  (req, res) => {
+    const url = req.url.split("/").filter((path) => path !== "");
+    // remove echo from the text
+    url.shift();
+    if (url.length) {
+      const message = url.join(" ").replace(/(%20)|\+/g, " ");
+      if (message.toLowerCase() === "hello world") {
+        res.send("Come on! That's too easy.");
+      } else {
+        res.send(message);
+      }
     } else {
-      res.send(message);
+      res.send(
+        "Add words to the url to make it say stuff. E.g. /echo/hello/world"
+      );
     }
-  } else {
-    res.send(
-      "Add words to the url to make it say stuff. E.g. /echo/hello/world"
-    );
-  }
-});
+  },
+  undefined
+);
 
 exports.app = app;
