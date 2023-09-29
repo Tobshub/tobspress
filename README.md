@@ -29,7 +29,7 @@ The `Tobspress` instance exposes method that will be familiar if you have used a
 ```javascript
 import Tobspress, {TobspressRouter} from "@tobshub/tobspress";
 
-// existing code
+const app = new Tobspress();
 
 const helloRouter = new TobspressRouter();
 
@@ -37,18 +37,17 @@ helloRouter.get("/world", (req, res) => {
   res.send("hello world");
 });
 
-app.use("/hello", {
-  router: helloRouter, 
-  handler: (req, res) => {
-    res.send("hello");
-  }
-});
+app.use(
+    "/hello", 
+    (req, res) =>  res.send("hello"),
+    helloRouter
+);
 
 app.use("/", (req, res) => {
   res.sendFile("public/index.html");
 });
 
-// existing code
+app.listen(4000);
 ```
 
 <!-- TODO: API explanations -->
